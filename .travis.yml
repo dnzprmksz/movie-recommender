@@ -1,6 +1,11 @@
 language: python
+sudo: true
 python:
     - "2.7"
+before_install:
+  - sudo apt-get install libblas-dev
+  - sudo apt-get install liblapack-dev
+  - sudo apt-get install gfortran
 install:
-    - pip install --only-binary=numpy,scipy numpy scipy
+    - pip install scipy
 script: Test
