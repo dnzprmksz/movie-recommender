@@ -8,4 +8,4 @@ before_install:
   - sudo apt-get install gfortran
 install:
     - pip install scipy
-script: Test
+script: python Test.py
