@@ -1,0 +1,3 @@
+scipy
+mysql
+numpy
