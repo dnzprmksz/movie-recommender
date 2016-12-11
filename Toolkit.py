@@ -1,5 +1,5 @@
 from scipy.sparse import csr_matrix, csc_matrix
-from numpy import load
+from numpy import load, mean
 
 
 def read_global_movie_rating():
@@ -13,8 +13,7 @@ def user_rating_deviation(user_id):
 	ratings = utility_csr.getrow(user_id)
 	
 	# Calculate and return the deviation of the user's rating from the global movie rating.
-	average = sum(ratings.data) / float(len(ratings.data))
-	return average - float(read_global_movie_rating())
+	return mean(ratings.data) - float(read_global_movie_rating())
 
 
 def movie_rating_deviation(movie_id):
@@ -23,8 +22,7 @@ def movie_rating_deviation(movie_id):
 	ratings = utility_csc.getcol(movie_id)
 	
 	# Calculate and return the deviation of the movie's rating from the global movie rating.
-	average = sum(ratings.data) / float(len(ratings.data))
-	return average - float(read_global_movie_rating())
+	return mean(ratings.data) - float(read_global_movie_rating())
 
 
 def baseline_estimate(user_id, movie_id):
