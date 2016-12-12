@@ -18,9 +18,10 @@ def create_factor_matrices(u1, u2, lambda1, lambda2, factor_count, num_iteration
 	loader = load("UtilityMatrix1000CSR.npz")
 	utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 	num_users = utility_csr.shape[0]
+	utility_csr = utility_csr.asfptype()
 	
 	# Apply Singular Value Decomposition (SVD) on utility matrix to approximate P and Q matrices of latent factor.
-	u, s, v = svds(utility_csr.asfptype())
+	u, s, v = svds(utility_csr)
 	p = u[:, 1:factor_count+1]  # User factor matrix as row vector.
 	q = v[1:factor_count+1, :]  # Item factor matrix as column vector.
 	q = np.transpose(q)         # Convert item factor matrix into row vector.
@@ -36,13 +37,16 @@ def create_factor_matrices(u1, u2, lambda1, lambda2, factor_count, num_iteration
 				pr = p[user_id]   # P as row vector.
 				qr = q[movie_id]  # Q as row vector.
 				
+				# TODO: Rewrite mathematical formula for user/item utility matrix and check this implementation.
 				# One iteration of update part of Stochastic Gradient Descent algorithm.
-				error = rating - qr * pc
-				q[movie_id] += np.multiply(u1, (np.multiply(error, pr) - np.multiply(lambda2, qr)))
-				p[user_id] += np.multiply(u2, (np.multiply(error, qr) - np.multiply(lambda1, pr)))
+				error = rating - qr.dot(pc)
+				q[movie_id] += u1 * (error * pr - lambda2 * qr)
+				p[user_id] += u2 * (error * qr - lambda1 * pr)
 				movie_index += 1
 	
 	# Save P and Q matrices.
 	np.save("SGD_P", p)
 	np.save("SGD_Q", q)
 	print "%f seconds elapsed." % (time() - start_time)
+
+create_factor_matrices(0.0001, 0.0001, 0.001, 0.001, 2, 600)
