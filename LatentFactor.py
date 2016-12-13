@@ -15,7 +15,7 @@ def create_factor_matrices(u1, u2, lambda1, lambda2, factor_count, num_iteration
 	start_time = time()
 	
 	# Load the utility matrix which will be used for the calculation of latent factor vectors.
-	loader = load("UtilityMatrix1000CSR.npz")
+	loader = load("UtilityMatrixCSR.npz")
 	utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 	num_users = utility_csr.shape[0]
 	utility_csr = utility_csr.asfptype()
@@ -28,6 +28,7 @@ def create_factor_matrices(u1, u2, lambda1, lambda2, factor_count, num_iteration
 	
 	# Stochastic Gradient Descent
 	for i in xrange(1, num_iterations):
+		loop_start_time = time()
 		movie_index = 0
 		for user_id in xrange(1, num_users - 1):
 			row = utility_csr.getrow(user_id)
@@ -43,10 +44,21 @@ def create_factor_matrices(u1, u2, lambda1, lambda2, factor_count, num_iteration
 				q[movie_id] += u1 * (error * pr - lambda2 * qr)
 				p[user_id] += u2 * (error * qr - lambda1 * pr)
 				movie_index += 1
+		# Print running time analysis for monitoring the status and performance of the job.
+		loop_time = time() - loop_start_time
+		total_time = time() - start_time
+		estimated_total = num_iterations * loop_time
+		estimated_remaining = (num_iterations - i) * loop_time
+		print "Finished loop #%d. Took %d minutes %d seconds." % (i, loop_time/60, loop_time % 60)
+		print "Total running time is %d hours %d minutes." % (total_time/3600, (total_time/60) % 60)
+		print "Estimated total time is %d hours %d minutes." % (estimated_total/3600, (estimated_total/60) % 60)
+		print "Estimated remaining time is %d hours %d minutes.\n" % (estimated_remaining/3600, (estimated_remaining/60) % 60)
 	
 	# Save P and Q matrices.
 	np.save("SGD_P", p)
 	np.save("SGD_Q", q)
-	print "%f seconds elapsed." % (time() - start_time)
+	print "Finished in %f seconds." % (time() - start_time)
+	print "Finished in %f minutes." % ((time() - start_time)/60)
+	print "Finished in %f hours." % ((time() - start_time)/3600)
 
-create_factor_matrices(0.0001, 0.0001, 0.001, 0.001, 2, 600)
+create_factor_matrices(0.0001, 0.0001, 0.001, 0.001, 2, 1000)
