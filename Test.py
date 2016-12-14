@@ -15,6 +15,12 @@ def test_lsh():
 	print("\n%f seconds elapsed." % (time() - start_time))
 
 
+def rmse(acquired_data, test_data):
+	diff = acquired_data - test_data
+	out = np.sqrt(diff**2/len(test_data.data))
+	return out
+
+
 def test_random_hyperplanes_similarity(i=62500, regenerate=False, vector_count=125):
 	start_time = time()
 	
@@ -34,7 +40,7 @@ def test_random_hyperplanes_similarity(i=62500, regenerate=False, vector_count=1
 		print("User %d and Candidate %d" % (i, j))
 		print("Angle and Distance: %d degrees, %f" % (angle, distance))
 		print("Original Distance:  %f\n" % cosine(u, v))
-	
+
 	print("\n%f seconds elapsed." % (time() - start_time))
 
 # Test cases.
