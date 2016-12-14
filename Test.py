@@ -1,4 +1,3 @@
-from __future__ import print_function
 import numpy as np
 from time import time
 from numpy import load
@@ -41,8 +40,12 @@ def test_lsh(num_bands):
 			count += 1
 	print("Distances less than 0.50: %d" % count)
 	print(sorted(distances))
-	
-	print("\n%f seconds elapsed." % (time() - start_time))
+
+
+def rmse(acquired_data, test_data):
+	diff = acquired_data - test_data
+	out = np.sqrt(diff**2/len(test_data.data))
+	return out
 
 
 def test_random_hyperplanes_similarity(i=62500, regenerate=False, vector_count=125):
@@ -61,11 +64,11 @@ def test_random_hyperplanes_similarity(i=62500, regenerate=False, vector_count=1
 		v = utility_csr.getrow(j).toarray()
 		angle, distance = __calculate_similarity_DO_NOT_USE__(i, j, signature)
 		
-		print("User %d and Candidate %d" % (i, j))
-		print("Angle and Distance: %d degrees, %f" % (angle, distance))
-		print("Original Distance:  %f\n" % cosine(u, v))
-	
-	print("\n%f seconds elapsed." % (time() - start_time))
+		print "User %d and Candidate %d" % (i, j)
+		print "Angle and Distance: %d degrees, %f" % (angle, distance)
+		print "Original Distance:  %f\n" % cosine(u, v)
+
+	print "\n%f seconds elapsed." % (time() - start_time)
 
 # Test cases.
 #test_random_hyperplanes_similarity()
