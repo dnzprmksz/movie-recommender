@@ -8,7 +8,7 @@ def read_global_movie_rating():
 
 
 def user_rating_deviation(user_id):
-	loader = load("UtilityMatrixCSR.npz")
+	loader = load("TrainingMatrixCSR.npz")
 	utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 	ratings = utility_csr.getrow(user_id)
 	
@@ -17,7 +17,7 @@ def user_rating_deviation(user_id):
 
 
 def movie_rating_deviation(movie_id):
-	loader = load("UtilityMatrixCSC.npz")
+	loader = load("TrainingMatrixCSC.npz")
 	utility_csc = csc_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 	ratings = utility_csc.getcol(movie_id)
 	

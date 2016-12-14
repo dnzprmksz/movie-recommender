@@ -15,7 +15,7 @@ def create_factor_matrices(u1, u2, lambda1, lambda2, factor_count, num_iteration
 	start_time = time()
 	
 	# Load the utility matrix which will be used for the calculation of latent factor vectors.
-	loader = load("UtilityMatrixCSR.npz")
+	loader = load("TrainingMatrixCSR.npz")
 	utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 	num_users = utility_csr.shape[0]
 	utility_csr = utility_csr.asfptype()

@@ -5,10 +5,10 @@ from scipy.sparse import csr_matrix, csc_matrix
 
 start_time = time()
 
-loader = load("UtilityMatrixCSC.npz")
+loader = load("TrainingMatrixCSC.npz")
 utility_csc = csc_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 
-loader = load("UtilityMatrixCSR.npz")
+loader = load("TrainingMatrixCSR.npz")
 utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 
 num_movies = utility_csc.shape[1]

@@ -2,4 +2,9 @@
 # Normalized utility matrices are fast to compute, around 10 seconds. No need to upload.
 NormalizedUtilityMatrixCSC.npz
 NormalizedUtilityMatrixCSR.npz
-*npy
+TestMatrixCSC.npz
+TestMatrixCSR.npz
+TrainingMatrixCSC.npz
+TrainingMatrixCSR.npz
+*.npy
+*.pyc
