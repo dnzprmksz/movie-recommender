@@ -62,4 +62,4 @@ def create_factor_matrices(u1, u2, lambda1, lambda2, factor_count, num_iteration
 	print("Finished in %f minutes." % ((time() - start_time)/60))
 	print("Finished in %f hours." % ((time() - start_time)/3600))
 
-create_factor_matrices(0.0001, 0.0001, 0.001, 0.001, 2, 1000)
+#create_factor_matrices(0.0001, 0.0001, 0.001, 0.001, 2, 1000)

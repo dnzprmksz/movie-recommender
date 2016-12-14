@@ -1,6 +1,7 @@
 import numpy as np
 from numpy import load
 from scipy.sparse import csr_matrix
+from scipy.spatial.distance import cosine
 
 
 def binary_hash(value):
@@ -25,26 +26,29 @@ def locality_sensitive_hashing(signature, num_bands):
 	hashmap = {}
 	pairs = []
 	
+	loader = load("NormalizedUtilityMatrixCSR.npz")
+	n_utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
+	
 	# Hash each band and assign to hash buckets.
-	for band in xrange(0, num_bands):
-		for user in xrange(1, num_users):
-			band_low = band * band_size
-			band_high = band_low + band_size
-			value = signature[user, band_low:band_high]
-			key = binary_hash(value)
-			hashmap.setdefault(key, []).append(user)  # Store (key, user_id) in map.
+	for user in xrange(1, num_users):
+		if len(n_utility_csr.getrow(user).nonzero()[0]) > 0:
+			for band in xrange(0, num_bands):
+				band_low = band * band_size
+				band_high = band_low + band_size
+				value = signature[user, band_low:band_high]
+				key = binary_hash(value)
+				hashmap.setdefault(key, []).append(user)  # Store (key, user_id) in map.
 	
 	# Find and return the candidate pairs.
-	for value in hashmap.itervalues():
+	for key, value in hashmap.iteritems():
 		if len(value) > 1:
-			a, d = calculate_similarity(value[0], value[1], signature)
-			print value, a
 			pairs.append(value)
 	
 	return pairs
 
 
-def calculate_similarity(user_id, candidate_id, signature):
+# FAILED! Cosine value is not close to the real one, because of the Jaccard similarity at the end.
+def __calculate_similarity_DO_NOT_USE__(user_id, candidate_id, signature):
 	dimension = signature.shape[1]
 	u = signature[user_id]
 	v = signature[candidate_id]
@@ -62,7 +66,7 @@ def calculate_similarity(user_id, candidate_id, signature):
 
 
 # Min-hashing with random vectors. More vectors produce better approximation.
-def generate_user_signature(num_vectors=100):
+def generate_user_signature(num_vectors=120):
 	# Using normalized utility matrix, since similarity in normalized matrix is more important than vanilla.
 	loader = load("NormalizedUtilityMatrixCSR.npz")
 	utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
