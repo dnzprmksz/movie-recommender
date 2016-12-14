@@ -3,6 +3,47 @@ from numpy import load
 from scipy.sparse import csr_matrix
 
 
+def binary_hash(value):
+	key = 0
+	for index in xrange(0, len(value)):
+		if value[index] == 1:
+			key += 2**index
+	return key
+
+
+def locality_sensitive_hashing(signature, num_bands):
+	num_users = signature.shape[0]
+	dimension = signature.shape[1]
+	
+	# Calculate the number of columns for each band.
+	if dimension % num_bands == 0:
+		band_size = dimension / num_bands
+	else:
+		raise ValueError("Dimension of the signature matrix is not divisible by given number of bands.")
+	
+	# Initialize empty dictionary for hashmap.
+	hashmap = {}
+	pairs = []
+	
+	# Hash each band and assign to hash buckets.
+	for band in xrange(0, num_bands):
+		for user in xrange(1, num_users):
+			band_low = band * band_size
+			band_high = band_low + band_size
+			value = signature[user, band_low:band_high]
+			key = binary_hash(value)
+			hashmap.setdefault(key, []).append(user)  # Store (key, user_id) in map.
+	
+	# Find and return the candidate pairs.
+	for value in hashmap.itervalues():
+		if len(value) > 1:
+			a, d = calculate_similarity(value[0], value[1], signature)
+			print value, a
+			pairs.append(value)
+	
+	return pairs
+
+
 def calculate_similarity(user_id, candidate_id, signature):
 	dimension = signature.shape[1]
 	u = signature[user_id]

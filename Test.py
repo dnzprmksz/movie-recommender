@@ -5,7 +5,14 @@ from numpy import load
 from scipy.sparse import csr_matrix
 from scipy.spatial.distance import cosine
 
-from RandomHyperplanes import calculate_similarity, generate_user_signature
+from RandomHyperplanes import calculate_similarity, generate_user_signature, locality_sensitive_hashing
+
+
+def test_lsh():
+	start_time = time()
+	signature = np.load("UserSignature.npy")
+	pairs = locality_sensitive_hashing(signature[0:10000], 4)
+	print("\n%f seconds elapsed." % (time() - start_time))
 
 
 def test_random_hyperplanes_similarity(i=62500, regenerate=False, vector_count=125):
@@ -31,4 +38,5 @@ def test_random_hyperplanes_similarity(i=62500, regenerate=False, vector_count=1
 	print("\n%f seconds elapsed." % (time() - start_time))
 
 # Test cases.
-test_random_hyperplanes_similarity()
+#test_random_hyperplanes_similarity()
+test_lsh()
