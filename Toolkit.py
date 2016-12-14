@@ -27,3 +27,7 @@ def movie_rating_deviation(movie_id):
 
 def baseline_estimate(user_id, movie_id):
 	return float(read_global_movie_rating()) + user_rating_deviation(user_id) + movie_rating_deviation(movie_id)
+
+#loader = load("TestUtilityMatrixCSC.npz")
+#utility_csc = csc_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
+#print utility_csc.nnz
