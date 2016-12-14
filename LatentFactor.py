@@ -1,3 +1,4 @@
+from __future__ import print_function
 import numpy as np
 from time import time
 from numpy import load
@@ -49,16 +50,16 @@ def create_factor_matrices(u1, u2, lambda1, lambda2, factor_count, num_iteration
 		total_time = time() - start_time
 		estimated_total = num_iterations * loop_time
 		estimated_remaining = (num_iterations - i) * loop_time
-		print "Finished loop #%d. Took %d minutes %d seconds." % (i, loop_time/60, loop_time % 60)
-		print "Total running time is %d hours %d minutes." % (total_time/3600, (total_time/60) % 60)
-		print "Estimated total time is %d hours %d minutes." % (estimated_total/3600, (estimated_total/60) % 60)
-		print "Estimated remaining time is %d hours %d minutes.\n" % (estimated_remaining/3600, (estimated_remaining/60) % 60)
+		print("Finished loop #%d. Took %d minutes %d seconds." % (i, loop_time/60, loop_time % 60))
+		print("Total running time is %d hours %d minutes." % (total_time/3600, (total_time/60) % 60))
+		print("Estimated total time is %d hours %d minutes." % (estimated_total/3600, (estimated_total/60) % 60))
+		print("Estimated remaining time is %d hours %d minutes.\n" % (estimated_remaining/3600, (estimated_remaining/60) % 60))
 	
 	# Save P and Q matrices.
 	np.save("SGD_P", p)
 	np.save("SGD_Q", q)
-	print "Finished in %f seconds." % (time() - start_time)
-	print "Finished in %f minutes." % ((time() - start_time)/60)
-	print "Finished in %f hours." % ((time() - start_time)/3600)
+	print("Finished in %f seconds." % (time() - start_time))
+	print("Finished in %f minutes." % ((time() - start_time)/60))
+	print("Finished in %f hours." % ((time() - start_time)/3600))
 
 create_factor_matrices(0.0001, 0.0001, 0.001, 0.001, 2, 1000)

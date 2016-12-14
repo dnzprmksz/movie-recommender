@@ -1,3 +1,4 @@
+from __future__ import print_function
 from time import time
 from numpy import load
 
@@ -12,10 +13,10 @@ for ranking in loader["data"]:
 	sum += ranking
 
 average = sum/count
-print "Global movie ranking is %d." % average
+print("Global movie ranking is %d." % average)
 
 # Save the global movie ranking not to calculate every time, it is not changing.
 with open('GlobalMovieRating.txt', 'w') as f:
 	f.write(str(average))
 
-print "%f seconds elapsed." % (time() - start_time)
+print("%f seconds elapsed." % (time() - start_time))
