@@ -27,3 +27,6 @@ def movie_rating_deviation(movie_id):
 
 def baseline_estimate(user_id, movie_id):
 	return float(read_global_movie_rating()) + user_rating_deviation(user_id) + movie_rating_deviation(movie_id)
+
+print(user_rating_deviation(10))
+print(movie_rating_deviation(10))

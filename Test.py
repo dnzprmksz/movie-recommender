@@ -1,4 +1,3 @@
-from __future__ import print_function
 import numpy as np
 from time import time
 from numpy import load
@@ -12,7 +11,7 @@ def test_lsh():
 	start_time = time()
 	signature = np.load("UserSignature.npy")
 	pairs = locality_sensitive_hashing(signature[0:10000], 4)
-	print("\n%f seconds elapsed." % (time() - start_time))
+	print "\n%f seconds elapsed." % (time() - start_time)
 
 
 def rmse(acquired_data, test_data):
@@ -37,11 +36,11 @@ def test_random_hyperplanes_similarity(i=62500, regenerate=False, vector_count=1
 		v = utility_csr.getrow(j).toarray()
 		angle, distance = calculate_similarity(i, j, signature)
 		
-		print("User %d and Candidate %d" % (i, j))
-		print("Angle and Distance: %d degrees, %f" % (angle, distance))
-		print("Original Distance:  %f\n" % cosine(u, v))
+		print "User %d and Candidate %d" % (i, j)
+		print "Angle and Distance: %d degrees, %f" % (angle, distance)
+		print "Original Distance:  %f\n" % cosine(u, v)
 
-	print("\n%f seconds elapsed." % (time() - start_time))
+	print "\n%f seconds elapsed." % (time() - start_time)
 
 # Test cases.
 #test_random_hyperplanes_similarity()
