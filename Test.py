@@ -11,36 +11,60 @@ from RandomHyperplanes import generate_user_signature, locality_sensitive_hashin
 
 def test_latent_factor(user_id, movie_id):
 	ranking = estimate_user_rating(user_id, movie_id)
-	print "User %d Movie %d. Estimated ranking: %d" % (user_id, movie_id, ranking)
-	
+	loader = load("Files/TrainingMatrixCSR.npz")
+	utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
+	real = utility_csr[user_id, movie_id]
+	print "User %d Movie %d. Real ranking: %f. Estimated ranking: %f" % (user_id, movie_id, real, ranking)
+
+
+def test_lsh_speed(num_bands):
+	start_time = time()
+	signature = np.load("Files/UserSignature.npy")
+	keys, pairs = locality_sensitive_hashing(signature, num_bands)
+	print "Finished in %d seconds." % (time() - start_time)
+
 
 def test_lsh(num_bands):
 	start_time = time()
 	signature = np.load("Files/UserSignature.npy")
-	keys, pairs = locality_sensitive_hashing(signature[0:100, :], num_bands)
-	print "---"
+	keys, pairs = locality_sensitive_hashing(signature, num_bands)
+	print "LSH completed in %d seconds." % (time() - start_time)
 	
 	loader = load("Files/NormalizedUtilityMatrixCSR.npz")
 	n_utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 	
+	size = len(keys)
+	count = 0
 	distances = set()
 	for key, pair in zip(keys, pairs):
-		print key, pair
 		num = len(pair)
 		for i in xrange(0, num):
 			for j in xrange(i+1, num):
 				u = n_utility_csr.getrow(pair[i]).toarray()
 				v = n_utility_csr.getrow(pair[j]).toarray()
 				distances.add(cosine(u, v))
+		count += 1
+		if count % 500 == 0:
+			print "%d/%d completed." % (count, size)
 	
 	print "---"
 	print "Distances: %d" % len(distances)
 	count = 0
 	for i in distances:
+		if i <= 0.35:
+			count += 1
+	print "Distances less than 0.35: %d" % count
+	count = 0
+	for i in distances:
 		if i <= 0.5:
 			count += 1
 	print "Distances less than 0.50: %d" % count
-	print sorted(distances)
+	count = 0
+	for i in distances:
+		if i <= 0.75:
+			count += 1
+	print "Distances less than 0.75: %d" % count
+	print "Finished in %d seconds." % (time() - start_time)
 
 
 def test_lsh_movie(num_bands):
@@ -100,11 +124,17 @@ def test_random_hyperplanes_similarity(i=62500, regenerate=False, vector_count=1
 
 	print "\n%f seconds elapsed." % (time() - start_time)
 
+
+def test_all(user_id, movie_id):
+	start_time = time()
+	print "Latent Factor"
+	test_latent_factor()
+	print "Finished in %d seconds.\n" % (time() - start_time)
+
 # Test cases.
 #test_random_hyperplanes_similarity(regenerate=True)
-#test_lsh(4)
+test_lsh(4)
+#test_lsh_speed(4)
 #generate_movie_signature()
 #test_lsh_movie(8)
-#test_latent_factor(777, 731)
-#test_latent_factor(777, 2027)
-#test_latent_factor(777, 11127)
+
