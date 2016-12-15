@@ -3,5 +3,7 @@
 NormalizedUtilityMatrixCSC.npz
 NormalizedUtilityMatrixCSR.npz
 UserSignature.npy
-TestUtilityMatrixCSC.npz
-TestUtilityMatrixCSR.npz
+TestMatrixCSC.npz
+TestMatrixCSR.npz
+TrainingMatrixCSC.npz
+TrainingMatrixCSR.npz

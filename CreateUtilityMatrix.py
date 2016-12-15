@@ -5,7 +5,7 @@ import time
 
 start_time = time.time()
 
-conn = mysql.connector.connect(user='root', password='admin', host='127.0.0.1', database='webscale')
+conn = mysql.connector.connect(user='root', password='nazli1234', host='127.0.0.1', database='webscale')
 print "Connected to the database successfully."
 cursor = conn.cursor()
 test_cursor = conn.cursor()
@@ -44,8 +44,8 @@ utility_csr = csr_matrix((data, (row, col)), shape=(num_of_users + 1, num_of_mov
 utility_csc = csc_matrix((data, (row, col)), shape=(num_of_users + 1, num_of_movies + 1))
 
 # Save utility matrices.
-np.savez("UtilityMatrixCSR", data=utility_csr.data, indices=utility_csr.indices, indptr=utility_csr.indptr, shape=utility_csr.shape)
-np.savez("UtilityMatrixCSC", data=utility_csc.data, indices=utility_csc.indices, indptr=utility_csc.indptr, shape=utility_csc.shape)
+np.savez("TrainingMatrixCSR", data=utility_csr.data, indices=utility_csr.indices, indptr=utility_csr.indptr, shape=utility_csr.shape)
+np.savez("TrainingMatrixCSC", data=utility_csc.data, indices=utility_csc.indices, indptr=utility_csc.indptr, shape=utility_csc.shape)
 
 print "%f seconds to finish." % (time.time() - start_time)
 
@@ -83,8 +83,8 @@ test_utility_csr = csr_matrix((test_data, (test_row, test_col)), shape=(test_num
 test_utility_csc = csc_matrix((test_data, (test_row, test_col)), shape=(test_num_of_users + 1, test_num_of_movies + 1))
 
 # Save utility matrices.
-np.savez("TestUtilityMatrixCSR", data=test_utility_csr.data, indices=test_utility_csr.indices, indptr=test_utility_csr.indptr, shape=test_utility_csr.shape)
-np.savez("TestUtilityMatrixCSC", data=test_utility_csc.data, indices=test_utility_csc.indices, indptr=test_utility_csc.indptr, shape=test_utility_csc.shape)
+np.savez("TestMatrixCSR", data=test_utility_csr.data, indices=test_utility_csr.indices, indptr=test_utility_csr.indptr, shape=test_utility_csr.shape)
+np.savez("TestMatrixCSC", data=test_utility_csc.data, indices=test_utility_csc.indices, indptr=test_utility_csc.indptr, shape=test_utility_csc.shape)
 
 print "%f seconds to finish." % (time.time() - start_time2)
 conn.close()

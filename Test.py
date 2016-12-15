@@ -28,7 +28,7 @@ def test_random_hyperplanes_similarity(i=62500, regenerate=False, vector_count=1
 		generate_user_signature(vector_count)
 	
 	# Load necessary matrices.
-	loader = load("UtilityMatrixCSR.npz")
+	loader = load("TrainingMatrixCSR.npz")
 	utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 	signature = np.load("UserSignature.npy")
 	
