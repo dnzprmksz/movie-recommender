@@ -3,7 +3,7 @@ from numpy import load
 
 start_time = time()
 
-loader = load("TrainingMatrixCSR.npz")
+loader = load("Files/TrainingMatrixCSR.npz")
 
 sum = 0
 count = len(loader["data"])  # Number of total rankings stored as matrix data.

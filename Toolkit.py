@@ -3,12 +3,12 @@ from numpy import load, mean
 
 
 def read_global_movie_rating():
-	with open('GlobalMovieRating.txt', 'r') as f:
+	with open('Files/GlobalMovieRating.txt', 'r') as f:
 		return f.read()
 
 
 def user_rating_deviation(user_id):
-	loader = load("TrainingMatrixCSR.npz")
+	loader = load("Files/TrainingMatrixCSR.npz")
 	utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 	ratings = utility_csr.getrow(user_id)
 	
@@ -17,7 +17,7 @@ def user_rating_deviation(user_id):
 
 
 def movie_rating_deviation(movie_id):
-	loader = load("TrainingMatrixCSC.npz")
+	loader = load("Files/TrainingMatrixCSC.npz")
 	utility_csc = csc_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 	ratings = utility_csc.getcol(movie_id)
 	
@@ -27,6 +27,3 @@ def movie_rating_deviation(movie_id):
 
 def baseline_estimate(user_id, movie_id):
 	return float(read_global_movie_rating()) + user_rating_deviation(user_id) + movie_rating_deviation(movie_id)
-
-print(user_rating_deviation(10))
-print(movie_rating_deviation(10))

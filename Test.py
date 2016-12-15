@@ -15,11 +15,11 @@ def test_latent_factor(user_id, movie_id):
 
 def test_lsh(num_bands):
 	start_time = time()
-	signature = np.load("UserSignature.npy")
+	signature = np.load("Files/UserSignature.npy")
 	pairs = locality_sensitive_hashing(signature, num_bands)
 	print("---")
 	
-	loader = load("NormalizedUtilityMatrixCSR.npz")
+	loader = load("Files/NormalizedUtilityMatrixCSR.npz")
 	n_utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 	
 	distances = set()
@@ -55,9 +55,9 @@ def test_random_hyperplanes_similarity(i=62500, regenerate=False, vector_count=1
 		generate_user_signature(vector_count)
 	
 	# Load necessary matrices.
-	loader = load("TrainingMatrixCSR.npz")
+	loader = load("Files/TrainingMatrixCSR.npz")
 	utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
-	signature = np.load("UserSignature.npy")
+	signature = np.load("Files/UserSignature.npy")
 	
 	for j in [1, 2, 62500]:
 		u = utility_csr.getrow(i).toarray()

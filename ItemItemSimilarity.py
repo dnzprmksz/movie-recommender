@@ -1,17 +1,17 @@
 import numpy as np
 from numpy import load, mean
 from scipy.sparse import csc_matrix, csr_matrix
-import mysql.connector
 from time import time
 from scipy.spatial.distance import cosine
 from Toolkit import baseline_estimate
 
-start_time = time()
 
 def find_item_similarity(user_id, movie_id):
-	loader = load("TrainingMatrixCSC.npz")
+	start_time = time()
+	
+	loader = load("Files/TrainingMatrixCSC.npz")
 	utility_csc = csc_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
-	loader = load("TrainingMatrixCSR.npz")
+	loader = load("Files/TrainingMatrixCSR.npz")
 	utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 
 	movie_ratings = utility_csc.getrow(user_id)
@@ -35,7 +35,7 @@ def find_item_similarity(user_id, movie_id):
 	print movie_ratings.data  # movie ratings
 	print user_ratings.indices  # user ids
 	print user_ratings.data  # rating of that movie
+	print "%f seconds elapsed." % (time() - start_time)
 
 
 find_item_similarity(2, 491)
-print "%f seconds elapsed." % (time() - start_time)

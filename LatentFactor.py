@@ -6,8 +6,8 @@ from scipy.sparse.linalg import svds
 
 
 def estimate_user_rating(user_id, movie_id):
-	p = np.load("SGD_P.npy")
-	q = np.load("SGD_Q.npy")
+	p = np.load("Files/SGD_P.npy")
+	q = np.load("Files/SGD_Q.npy")
 	return q[movie_id].dot(np.transpose(p[user_id]))
 
 
@@ -15,7 +15,7 @@ def create_factor_matrices(u1, u2, lambda1, lambda2, factor_count, num_iteration
 	start_time = time()
 	
 	# Load the utility matrix which will be used for the calculation of latent factor vectors.
-	loader = load("TrainingMatrixCSR.npz")
+	loader = load("Files/TrainingMatrixCSR.npz")
 	utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 	num_users = utility_csr.shape[0]
 	utility_csr = utility_csr.asfptype()
@@ -37,7 +37,7 @@ def create_factor_matrices(u1, u2, lambda1, lambda2, factor_count, num_iteration
 				pc = np.transpose(p[user_id])  # P as column vector.
 				pr = p[user_id]   # P as row vector.
 				qr = q[movie_id]  # Q as row vector.
-                                
+
 				# TODO: Rewrite mathematical formula for user/item utility matrix and check this implementation.
 				# One iteration of update part of Stochastic Gradient Descent algorithm.
 				error = rating - qr.dot(pc)
@@ -55,8 +55,8 @@ def create_factor_matrices(u1, u2, lambda1, lambda2, factor_count, num_iteration
 		print "Estimated remaining time is %d hours %d minutes.\n" % (estimated_remaining/3600, (estimated_remaining/60) % 60)
 	
 	# Save P and Q matrices.
-	np.save("SGD_P", p)
-	np.save("SGD_Q", q)
+	np.save("Files/SGD_P", p)
+	np.save("Files/SGD_Q", q)
 	print "Finished in %f seconds." % (time() - start_time)
 	print "Finished in %f minutes." % ((time() - start_time)/60)
 	print "Finished in %f hours." % ((time() - start_time)/3600)

@@ -1,10 +1,5 @@
 .idea/
-# Normalized utility matrices are fast to compute, around 10 seconds. No need to upload.
-NormalizedUtilityMatrixCSC.npz
-NormalizedUtilityMatrixCSR.npz
-TestMatrixCSC.npz
-TestMatrixCSR.npz
-TrainingMatrixCSC.npz
-TrainingMatrixCSR.npz
+Files/
+*.npz
 *.npy
 *.pyc

@@ -1,7 +1,6 @@
 import numpy as np
 from numpy import load
 from scipy.sparse import csr_matrix
-from scipy.spatial.distance import cosine
 
 
 def binary_hash(value):
@@ -26,7 +25,7 @@ def locality_sensitive_hashing(signature, num_bands):
 	hashmap = {}
 	pairs = []
 	
-	loader = load("NormalizedUtilityMatrixCSR.npz")
+	loader = load("Files/NormalizedUtilityMatrixCSR.npz")
 	n_utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 	
 	# Hash each band and assign to hash buckets.
@@ -68,7 +67,7 @@ def __calculate_similarity_DO_NOT_USE__(user_id, candidate_id, signature):
 # Min-hashing with random vectors. More vectors produce better approximation.
 def generate_user_signature(num_vectors=120):
 	# Using normalized utility matrix, since similarity in normalized matrix is more important than vanilla.
-	loader = load("NormalizedUtilityMatrixCSR.npz")
+	loader = load("Files/NormalizedUtilityMatrixCSR.npz")
 	utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 	
 	# Get number of movies as the dimensions of the vector space.
@@ -93,4 +92,4 @@ def generate_user_signature(num_vectors=120):
 	signature[signature <= 0] = -1
 	
 	# Save signature matrix.
-	np.save("UserSignature", signature)
+	np.save("Files/UserSignature", signature)
