@@ -1,5 +1,3 @@
-from numpy import load
-from scipy.sparse import csr_matrix, csc_matrix
 from scipy.spatial.distance import cosine
 from Toolkit import baseline_estimate
 
@@ -9,8 +7,6 @@ def estimate_by_item_similarity(user_id, movie_id, utility_csr, utility_csc, thr
 	target_movie = utility_csc.getcol(movie_id)
 	target_user = utility_csr.getrow(user_id)
 	movies_of_user = target_user.indices
-	num_user_movies = len(movies_of_user)
-	
 	
 	# Find the movies that are rated by target user.
 	candidate_movies = []
@@ -26,14 +22,14 @@ def estimate_by_item_similarity(user_id, movie_id, utility_csr, utility_csc, thr
 		distance = candidate[1]
 		if distance <= threshold:
 			similar_movies.append(candidate)
-
-        # If there is no similar movie with threshold, then take all
-        if len(similar_movies) == 0:
-                similar_movies = candidate_movies
+	# If there is no similar movie with threshold, then take all.
+	if len(similar_movies) == 0:
+		similar_movies = candidate_movies
+	
 	upper_term = 0
 	lower_term = 0
 	# Calculate the weighted average of deviations.
-        
+
 	for movie_tuple in similar_movies:
 		m_id = movie_tuple[0]
 		m_distance = movie_tuple[1]
@@ -49,12 +45,3 @@ def estimate_by_item_similarity(user_id, movie_id, utility_csr, utility_csc, thr
 	# Calculate the rating.
 	rating = baseline_estimate(user_id, movie_id, utility_csr, utility_csc) + (upper_term/lower_term)
 	return rating
-
-# # Load training matrices.
-# loader = load("Files/TrainingMatrixCSR.npz")
-# training_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
-
-# loader = load("Files/TrainingMatrixCSC.npz")
-# training_csc = csc_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
-# i,j = 10,20
-# item_estimation = estimate_by_item_similarity(i, j, training_csr, training_csc)
