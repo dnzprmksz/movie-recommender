@@ -37,15 +37,19 @@ def locality_sensitive_hashing(signature, num_bands):
 				band_high = band_low + band_size
 				value = signature[user, band_low:band_high]
 				key = binary_hash(value)
-				hashmap.setdefault(key, []).append(user)  # Store (key, user_id) in map.
+				hashmap.setdefault(key, set()).add(user)  # Store (key, user_id) in map.
 	
 	# Find and return the candidate pairs.
-	for key, value in hashmap.iteritems():
-		if len(value) > 1:
-			keys.append(key)
-			pairs.append(value)
+        pairs = [list(value) for value in hashmap.itervalues() if len(value) > 1]
+        # Below code left out for debugging purposes just in case keys are important
+        # pairs = []
+        # keys = []
+	# for key, value in hashmap.iteritems():
+	# 	if len(value) > 1:
+        #               keys.append(key)
+	# 		pairs.append(list(value))
 	
-	return keys, pairs
+	return pairs
 
 
 def locality_sensitive_hashing_movie(signature, num_bands):
