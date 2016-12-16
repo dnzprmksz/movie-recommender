@@ -4,6 +4,7 @@ from numpy import load
 from scipy.sparse import csr_matrix, csc_matrix
 from scipy.spatial.distance import cosine
 
+import Toolkit
 from LatentFactor import estimate_user_rating
 from RandomHyperplanes import generate_user_signature, locality_sensitive_hashing, __calculate_similarity_DO_NOT_USE__, \
 	locality_sensitive_hashing_movie, generate_movie_signature
@@ -96,12 +97,6 @@ def test_lsh_movie(num_bands):
 	print sorted(distances)
 
 
-def rmse(acquired_data, test_data):
-	diff = acquired_data - test_data
-	out = np.sqrt(diff**2/len(test_data.data))
-	return out
-
-
 def test_random_hyperplanes_similarity(i=62500, regenerate=False, vector_count=120):
 	start_time = time()
 	
@@ -128,13 +123,15 @@ def test_random_hyperplanes_similarity(i=62500, regenerate=False, vector_count=1
 def test_all(user_id, movie_id):
 	start_time = time()
 	print "Latent Factor"
-	test_latent_factor()
+	test_latent_factor(user_id, movie_id)
 	print "Finished in %d seconds.\n" % (time() - start_time)
+	
+	print Toolkit.estimate_rating(user_id, movie_id)
 
 # Test cases.
 #test_random_hyperplanes_similarity(regenerate=True)
-test_lsh(4)
+#test_lsh(4)
 #test_lsh_speed(4)
 #generate_movie_signature()
 #test_lsh_movie(8)
-
+test_all(3, 590)

@@ -1,19 +1,8 @@
-from numpy import load
-from scipy.sparse import csc_matrix, csr_matrix
-from time import time
 from scipy.spatial.distance import cosine
 from Toolkit import baseline_estimate
 
 
-def estimate_by_item_similarity(user_id, movie_id, threshold=0.5):
-	start_time = time()
-	
-	# Load utility matrix as Row anc Column matrices.
-	loader = load("Files/TrainingMatrixCSC.npz")
-	utility_csc = csc_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
-	loader = load("Files/TrainingMatrixCSR.npz")
-	utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
-	
+def estimate_by_item_similarity(user_id, movie_id, utility_csr, utility_csc, threshold=0.5):
 	# Get the data of target movie and target user.
 	target_movie = utility_csc.getcol(movie_id)
 	target_user = utility_csr.getrow(user_id)
@@ -46,7 +35,7 @@ def estimate_by_item_similarity(user_id, movie_id, threshold=0.5):
 		m_distance = movie_tuple[1]
 		m_rating = utility_csr[user_id, m_id]
 		
-		m_baseline = baseline_estimate(user_id, m_id)
+		m_baseline = baseline_estimate(user_id, m_id, utility_csr, utility_csc)
 		deviation = m_rating - m_baseline
 		similarity = 1 - m_distance
 		
@@ -54,5 +43,5 @@ def estimate_by_item_similarity(user_id, movie_id, threshold=0.5):
 		lower_term += similarity
 	
 	# Calculate the rating.
-	rating = baseline_estimate(user_id, movie_id) + (upper_term/lower_term)
+	rating = baseline_estimate(user_id, movie_id, utility_csr, utility_csc) + (upper_term/lower_term)
 	return rating

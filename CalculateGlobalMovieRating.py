@@ -15,7 +15,7 @@ average = sum/count
 print "Global movie ranking is %d." % average
 
 # Save the global movie ranking not to calculate every time, it is not changing.
-with open('GlobalMovieRating.txt', 'w') as f:
+with open('Files/GlobalMovieRating.txt', 'w') as f:
 	f.write(str(average))
 
 print "%f seconds elapsed." % (time() - start_time)
