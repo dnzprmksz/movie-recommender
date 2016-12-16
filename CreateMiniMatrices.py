@@ -31,7 +31,7 @@ print "%f seconds till SQL query ends." % (time.time() - start_time)
 row = []
 col = []
 data = []
-print num_of_users
+
 # Fill the vectors corresponding to the users, movies and ratings.
 for query_row in cursor:
 	row.append(query_row[0])  # user_id
@@ -63,7 +63,7 @@ test_cursor.execute("SELECT COUNT(*) FROM user_list WHERE user_id<40;")
 item2 = test_cursor.fetchone()
 test_num_of_users = item2[0]
 
-test_cursor.execute("SELECT COUNT(*) FROM movie_list;")
+test_cursor.execute("SELECT COUNT(*) FROM movie_list WHERE id<10000;")
 item2 = test_cursor.fetchone()
 test_num_of_movies = item2[0]
 
