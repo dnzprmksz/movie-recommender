@@ -57,4 +57,4 @@ def create_factor_matrices(u1, u2, lambda1, lambda2, factor_count):
 			np.save(q_filename, q)
 
 # Create P and Q matrices. Comment out below function or call in another file.
-# create_factor_matrices(0.0003, 0.0004, 0.0008, 0.0009, 3)
+# create_factor_matrices(0.0003, 0.0004, 0.0008, 0.0009, 3

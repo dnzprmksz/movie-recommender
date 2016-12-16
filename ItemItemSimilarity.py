@@ -1,7 +1,6 @@
 from scipy.spatial.distance import cosine
 from Toolkit import baseline_estimate
 
-
 def estimate_by_item_similarity(user_id, movie_id, utility_csr, utility_csc, threshold=0.5):
 	# Get the data of target movie and target user.
 	target_movie = utility_csc.getcol(movie_id)
