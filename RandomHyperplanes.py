@@ -12,7 +12,6 @@ def binary_hash(value):
 
 
 def locality_sensitive_hashing(signature, num_bands):
-<<<<<<< Updated upstream
 	num_users = signature.shape[0]
 	dimension = signature.shape[1]
 	
@@ -51,43 +50,6 @@ def locality_sensitive_hashing(signature, num_bands):
 	# 		pairs.append(list(value))
 	
 	return pairs
-=======
-    num_users = signature.shape[0]
-    dimension = signature.shape[1]
-
-    # Calculate the number of columns for each band.
-    if dimension % num_bands == 0:
-        band_size = dimension / num_bands
-    else:
-        raise ValueError("Dimension of the signature matrix is not divisible by given number of bands.")
-
-    # Initialize empty dictionary for hashmap.
-    hashmap = {}
-    keys = []
-    pairs = []
-
-    loader = load("Files/NormalizedUtilityMatrixCSR.npz")
-    n_utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
-
-    # Hash each band and assign to hash buckets.
-    for user in xrange(1, num_users):
-        if len(n_utility_csr.getrow(user).nonzero()[0]) > 0:
-            for band in xrange(0, num_bands):
-                band_low = band * band_size
-                band_high = band_low + band_size
-                value = signature[user, band_low:band_high]
-                key = binary_hash(value)
-                hashmap.setdefault(key, []).append(user)  # Store (key, user_id) in map.
-
-    # Find and return the candidate pairs.
-    for key, value in hashmap.iteritems():
-        if len(value) > 1:
-            keys.append(key)
-            pairs.append(value)
-
-    return keys, pairs
->>>>>>> Stashed changes
-
 
 def locality_sensitive_hashing_movie(signature, num_bands):
     num_movies = signature.shape[0]
