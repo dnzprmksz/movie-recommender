@@ -27,22 +27,22 @@ def test_lsh_speed(num_bands):
 def test_lsh(num_bands):
 	start_time = time()
 	signature = np.load("Files/UserSignature.npy")
-	keys, pairs = locality_sensitive_hashing(signature, num_bands)
+	pairs = locality_sensitive_hashing(signature, num_bands)
 	print "LSH completed in %d seconds." % (time() - start_time)
 	
 	loader = load("Files/NormalizedUtilityMatrixCSR.npz")
 	n_utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 	
-	size = len(keys)
+	size = len(pairs)
 	count = 0
-	distances = set()
-	for key, pair in zip(keys, pairs):
+	distances = []
+	for pair in pairs:
 		num = len(pair)
 		for i in xrange(0, num):
+			u = n_utility_csr.getrow(pair[i]).toarray()
 			for j in xrange(i+1, num):
-				u = n_utility_csr.getrow(pair[i]).toarray()
 				v = n_utility_csr.getrow(pair[j]).toarray()
-				distances.add(cosine(u, v))
+				distances.append(cosine(u, v))
 		count += 1
 		if count % 500 == 0:
 			print "%d/%d completed." % (count, size)
@@ -70,19 +70,18 @@ def test_lsh(num_bands):
 def test_lsh_movie(num_bands):
 	start_time = time()
 	signature = np.load("Files/MovieSignature.npy")
-	keys, pairs = locality_sensitive_hashing_movie(signature[0:2000], num_bands)
+	pairs = locality_sensitive_hashing_movie(signature[0:2000], num_bands)
 	print "---"
 	
 	loader = load("Files/NormalizedUtilityMatrixCSC.npz")
 	n_utility_csc = csc_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 	
-	distances = set()
-	for key, pair in zip(keys, pairs):
-		print key, pair
+	distances = []
+	for pair in pairs:
 		num = len(pair)
 		for i in xrange(0, num):
+			u = n_utility_csc.getcol(pair[i]).toarray()
 			for j in xrange(i + 1, num):
-				u = n_utility_csc.getcol(pair[i]).toarray()
 				v = n_utility_csc.getcol(pair[j]).toarray()
 				distances.add(cosine(u, v))
 	
