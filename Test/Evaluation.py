@@ -1,11 +1,7 @@
-from scipy.sparse import csc_matrix, csr_matrix
-from numpy import load
-import numpy as np
-
 import UserUserSimilarity
-from Toolkit import baseline_estimate
-import ItemItemSimilarity
-import LatentFactor
+import numpy as np
+from numpy import load
+from scipy.sparse import csc_matrix, csr_matrix
 
 
 def evaluate():
@@ -14,9 +10,9 @@ def evaluate():
 	q = np.load("Files/SGD_Q_100.npy")
 	
 	# Load test matrices.
-	loader = load("Files/MiniTestMatrixCSR.npz")
+	loader = load("Files/TestMatrixCSR.npz")
 	test_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
-	loader = load("Files/MiniTestMatrixCSC.npz")
+	loader = load("Files/TestMatrixCSC.npz")
 	test_csc = csc_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 	
 	# Load training matrices.
@@ -35,7 +31,7 @@ def evaluate():
 	# Calculate inner part of the square root of the RMSE.
 	for i in xrange(1, test_csr.shape[0] - 1):
 		movie_index = 0
-		row = test_csr.getrow(i)
+		row = test_csr[i]
 		for j in row.indices:
 			rating = row.data[movie_index]
 			movie_index += 1
@@ -52,7 +48,7 @@ def evaluate():
 			user_estimation = UserUserSimilarity.estimate_by_user_similarity(i, j, user_signature, training_csc)
 			user_sum += (user_estimation - rating) ** 2
 		# Status
-		if i % 1 == 0:
+		if i % 100 == 0:
 			print "%d/%d completed." % (i, test_csr.shape[0] - 1)
 	
 	data_size = len(test_csr.data)

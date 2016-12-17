@@ -1,13 +1,14 @@
+from time import time
+
 import mysql.connector
 import numpy as np
-from time import time
+from LatentFactor import estimate_user_rating
 from numpy import load
 from scipy.sparse import csr_matrix, csc_matrix
 from scipy.spatial.distance import cosine
 
 import Sebastian
-from LatentFactor import estimate_user_rating
-from RandomHyperplanes import generate_user_signature, locality_sensitive_hashing, locality_sensitive_hashing_movie
+from Core.RandomHyperplanes import generate_user_signature, locality_sensitive_hashing, locality_sensitive_hashing_movie
 
 
 def test_sebastian_recommendation(user_id):

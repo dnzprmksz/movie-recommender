@@ -1,9 +1,9 @@
+import LatentFactor
+import numpy as np
 from numpy import load
 from scipy.sparse import csr_matrix
-import numpy as np
 
-import LatentFactor
-import RandomHyperplanes
+from Core import RandomHyperplanes
 
 
 def recommend_movie(user_id):
