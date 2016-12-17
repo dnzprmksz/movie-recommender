@@ -50,7 +50,7 @@ def estimate_by_item_similarity(user_id, movie_id, utility_csr, utility_csc, thr
 		lower_term += similarity
 	
 	# Calculate the rating.
-	rating = baseline_estimate(user_id, movie_id, utility_csr, utility_csc) + (upper_term / lower_term)
+	rating = baseline_estimate(user_id, movie_id, utility_csr, utility_csc)
 	if lower_term != 0:
 		rating += (upper_term / lower_term)
 	return rating
