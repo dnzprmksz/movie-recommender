@@ -1,48 +1,44 @@
-import numpy as np
-from time import time
-from numpy import load
-from scipy.sparse import csr_matrix, csc_matrix
-from scipy.spatial.distance import cosine
-from RandomHyperplanes import __calculate_similarity_DO_NOT_USE__
+from RandomHyperplanes import calculate_user_similarity
 
 
-def estimate_by_user_similarity(user_id, movie_id, signature, utility_csr, utility_csc, threshold=0.5):
-    # Load necessary matrices.
-    
-    candidates = []
-    user_count=259138
-    for other_user in xrange(1,user_count):
-	_, distance = __calculate_similarity_DO_NOT_USE__(user_id, other_user, signature)
+def estimate_by_user_similarity(user_id, movie_id, signature, utility_csc):
+	candidates = []
+	non_candidates = []
+	
+	# Find the users that rated the given movie.
+	movie_col = utility_csc.getcol(movie_id)
+	rated_users = movie_col.indices
+	user_ratings = movie_col.data
+	
+	# Calculate the similarity of these users and store them with their rating to the given movie.
+	for i in xrange(0, len(rated_users)):
+		candidate_id = rated_users[i]
+		if candidate_id != user_id:
+			_, distance = calculate_user_similarity(user_id, candidate_id, signature)
+			similarity = 1 - distance
+			rating = user_ratings[i]
+			# Store the similarity/rating data.
+			if similarity >= 0.5:
+				candidates.append((similarity, rating))
+			else:
+				non_candidates.append((similarity, rating))
+	
+	# If there is not enough close users, add some more distant users.
+	num_candidates = len(candidates)
+	if num_candidates < 4:
+		diff = 4 - num_candidates
+		non_candidates.sort(key=(lambda x: x[0]), reverse=True)  # Sort the list with respect to the similarity.
+		candidates.extend(non_candidates[0:diff])
+	
+	upper_term = 0
+	lower_term = 0
+	# Calculate the upper/lower terms of the rating prediction formula.
+	for similarity, rating in candidates:
+		upper_term += similarity * rating
+		lower_term += similarity
 
-	if distance <= threshold:
-	    rating = utility_csr[other_user, movie_id]
-	    candidates.append((1-distance, rating))
-
-    upper_term = 0
-    lower_term = 0
-    print candidates
-    if len(candidates) == 0:
-	return 0
-    
-    for similarity, rating in candidates:
-	if rating > 0:
-	    upper_term += similarity * rating
-	    lower_term += similarity
-
-    rating = upper_term / lower_term
-    return rating
-
-
-
-# # Load training matrices.
-# loader = load("Files/TrainingMatrixCSR.npz")
-# training_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
-
-# loader = load("Files/TrainingMatrixCSC.npz")
-# training_csc = csc_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
-
-# signature = np.load("Files/UserSignature.npy")
-
-# estimation = estimate_by_user_similarity(10, 20, signature, training_csr, training_csc)
-
-# print estimation
+	if lower_term > 0:
+		rating = upper_term / lower_term
+	else:
+		rating = 70  # Global average.
+	return rating

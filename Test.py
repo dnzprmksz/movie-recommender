@@ -28,7 +28,7 @@ def test_latent_factor(user_id, movie_id):
 	utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 	real = utility_csr[user_id, movie_id]
 	print "User %d Movie %d. Real ranking: %f. Estimated ranking: %f" % (user_id, movie_id, real, ranking)
-
+ 
 
 def test_lsh_speed(num_bands):
 	start_time = time()

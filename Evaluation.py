@@ -14,9 +14,9 @@ def evaluate():
 	q = np.load("Files/SGD_Q_100.npy")
 	
 	# Load test matrices.
-	loader = load("Files/TestMatrixCSR.npz")
+	loader = load("Files/MiniTestMatrixCSR.npz")
 	test_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
-	loader = load("Files/TestMatrixCSC.npz")
+	loader = load("Files/MiniTestMatrixCSC.npz")
 	test_csc = csc_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 	
 	# Load training matrices.
@@ -40,19 +40,19 @@ def evaluate():
 			rating = row.data[movie_index]
 			movie_index += 1
 			# Latent factor
-			latent_factor_estimation = LatentFactor.estimate_user_rating(i, j, p, q)
-			latent_sum += (latent_factor_estimation - rating) ** 2
+			#latent_factor_estimation = LatentFactor.estimate_user_rating(i, j, p, q)
+			#latent_sum += (latent_factor_estimation - rating) ** 2
 			# Baseline estimate
-			baseline_estimation = baseline_estimate(i, j, training_csr, training_csc)
-			baseline_sum += (baseline_estimation - rating) ** 2
+			#baseline_estimation = baseline_estimate(i, j, training_csr, training_csc)
+			#baseline_sum += (baseline_estimation - rating) ** 2
 			# Item-Item
-			item_estimation = ItemItemSimilarity.estimate_by_item_similarity(i, j, training_csr, training_csc)
-			item_sum += (item_estimation - rating) ** 2
+			#item_estimation = ItemItemSimilarity.estimate_by_item_similarity(i, j, training_csr, training_csc)
+			#item_sum += (item_estimation - rating) ** 2
 			# User-User
-			user_estimation = UserUserSimilarity.estimate_by_user_similarity(i, j, user_signature, test_csc)
+			user_estimation = UserUserSimilarity.estimate_by_user_similarity(i, j, user_signature, training_csc)
 			user_sum += (user_estimation - rating) ** 2
 		# Status
-		if i % 100 == 0:
+		if i % 1 == 0:
 			print "%d/%d completed." % (i, test_csr.shape[0] - 1)
 	
 	data_size = len(test_csr.data)
