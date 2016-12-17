@@ -5,10 +5,10 @@ from scipy.sparse import csr_matrix, csc_matrix
 
 start_time = time()
 
-loader = load("Files/TrainingMatrixCSC.npz")
+loader = load("../Files/TrainingMatrixCSC.npz")
 utility_csc = csc_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 
-loader = load("Files/TrainingMatrixCSR.npz")
+loader = load("../Files/TrainingMatrixCSR.npz")
 utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 
 num_movies = utility_csc.shape[1]
@@ -31,7 +31,7 @@ for index in xrange(1, num_users):
 # Save normalized utility matrices.
 utility_csc.eliminate_zeros()
 utility_csr.eliminate_zeros()
-np.savez("Files/NormalizedUtilityMatrixCSC", data=utility_csc.data, indices=utility_csc.indices, indptr=utility_csc.indptr, shape=utility_csc.shape)
-np.savez("Files/NormalizedUtilityMatrixCSR", data=utility_csr.data, indices=utility_csr.indices, indptr=utility_csr.indptr, shape=utility_csr.shape)
+np.savez("../Files/NormalizedUtilityMatrixCSC", data=utility_csc.data, indices=utility_csc.indices, indptr=utility_csc.indptr, shape=utility_csc.shape)
+np.savez("../Files/NormalizedUtilityMatrixCSR", data=utility_csr.data, indices=utility_csr.indices, indptr=utility_csr.indptr, shape=utility_csr.shape)
 
 print "%f seconds elapsed." % (time() - start_time)

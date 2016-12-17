@@ -10,18 +10,18 @@ def estimate_user_rating(user_id, movie_id, p, q):
 
 def create_factor_matrices(u1, u2, lambda1, lambda2, factor_count):
 	start_time = time()
-	
+
 	# Load the utility matrix which will be used for the calculation of latent factor vectors.
-	loader = load("Files/TrainingCSR.npz")
+	loader = load("../Files/TrainingCSR.npz")
 	utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 	num_users = utility_csr.shape[0]
 	num_movies = utility_csr.shape[1]
 	utility_csr = utility_csr.asfptype()  # Change data type into float.
-	
+
 	# Approximate P and Q matrices of latent factor.
 	p = 7 * np.random.rand(num_users, factor_count) + 3  # User factor matrix as row vector.
 	q = 7 * np.random.rand(num_movies, factor_count) + 3  # Item factor matrix as row vector.
-	
+
 	loop_count = 0
 	# Stochastic Gradient Descent
 	while True:
@@ -42,17 +42,17 @@ def create_factor_matrices(u1, u2, lambda1, lambda2, factor_count):
 				q[movie_id] += u1 * (error * pr - lambda2 * qr)
 				p[user_id] += u2 * (error * qr - lambda1 * pr)
 				movie_index += 1
-				
+
 		# Print running time analysis for monitoring the status and performance of the job.
 		loop_time = time() - loop_start_time
 		total_time = time() - start_time
 		print "Finished loop #%d. Took %d minutes %d seconds." % (loop_count, loop_time / 60, loop_time % 60)
 		print "Total running time is %d hours %d minutes.\n" % (total_time / 3600, (total_time / 60) % 60)
-		
+
 		# Save matrices in every 25 loop.
 		if loop_count % 25 == 0:
-			p_filename = "Files/SGD_P_" + str(loop_count)
-			q_filename = "Files/SGD_Q_" + str(loop_count)
+			p_filename = "../Files/SGD_P_" + str(loop_count)
+			q_filename = "../Files/SGD_Q_" + str(loop_count)
 			np.save(p_filename, p)
 			np.save(q_filename, q)
 

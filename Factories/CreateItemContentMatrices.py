@@ -110,20 +110,20 @@ genre_based_csc = csc_matrix((data_genre, (row_genre, column_genre)), shape=(num
 year_based_csc = csc_matrix((data_year, (row_year, column_year)), shape=(num_of_movies + 1, max_year + 1));
 
 # Save utility matrices.
-np.savez("Files/ActorBasedMatrixCSR", data=actor_based_csr.data, indices=actor_based_csr.indices, indptr=actor_based_csr.indptr,
+np.savez("../Files/ActorBasedMatrixCSR", data=actor_based_csr.data, indices=actor_based_csr.indices, indptr=actor_based_csr.indptr,
          shape=actor_based_csr.shape)
-np.savez("Files/GenreBasedMatrixCSR", data=genre_based_csr.data, indices=genre_based_csr.indices, indptr=genre_based_csr.indptr,
+np.savez("../Files/GenreBasedMatrixCSR", data=genre_based_csr.data, indices=genre_based_csr.indices, indptr=genre_based_csr.indptr,
          shape=genre_based_csr.shape)
-# np.savez("Files/DirectorBasedMatrixCSR", data=genre_based_csr, indices=genre_based_csr.indices,
+# np.savez("../Files/DirectorBasedMatrixCSR", data=genre_based_csr, indices=genre_based_csr.indices,
 # indptr=genre_based_csr.indptr, shape=genre_based_csr.shape)
-np.savez("Files/YearBasedMatrixCSR", data=year_based_csr.data, indices=year_based_csr.indices, indptr=year_based_csr.indptr,
+np.savez("../Files/YearBasedMatrixCSR", data=year_based_csr.data, indices=year_based_csr.indices, indptr=year_based_csr.indptr,
          shape=year_based_csr.shape)
 
-np.savez("Files/ActorBasedMatrixCSC", data=actor_based_csc.data, indices=actor_based_csc.indices, indptr=actor_based_csc.indptr,
+np.savez("../Files/ActorBasedMatrixCSC", data=actor_based_csc.data, indices=actor_based_csc.indices, indptr=actor_based_csc.indptr,
          shape=actor_based_csc.shape)
-np.savez("Files/GenreBasedMatrixCSC", data=genre_based_csc.data, indices=genre_based_csc.indices, indptr=genre_based_csc.indptr,
+np.savez("../Files/GenreBasedMatrixCSC", data=genre_based_csc.data, indices=genre_based_csc.indices, indptr=genre_based_csc.indptr,
          shape=genre_based_csc.shape)
-np.savez("Files/YearBasedMatrixCSC", data=year_based_csc.data, indices=year_based_csc.indices, indptr=year_based_csc.indptr,
+np.savez("../Files/YearBasedMatrixCSC", data=year_based_csc.data, indices=year_based_csc.indices, indptr=year_based_csc.indptr,
          shape=year_based_csc.shape)
 
 print "%f seconds to finish." % (time.time() - start_time)

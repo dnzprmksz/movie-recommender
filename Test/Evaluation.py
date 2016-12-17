@@ -1,33 +1,33 @@
-import UserUserSimilarity
 import numpy as np
 from numpy import load
 from scipy.sparse import csc_matrix, csr_matrix
 
+from Core import UserUserSimilarity
 
 def evaluate():
 	# Load latent factor matrices.
-	p = np.load("Files/SGD_P_100.npy")
-	q = np.load("Files/SGD_Q_100.npy")
-	
+	p = np.load("../Files/SGD_P_100.npy")
+	q = np.load("../Files/SGD_Q_100.npy")
+
 	# Load test matrices.
-	loader = load("Files/TestMatrixCSR.npz")
+	loader = load("../Files/TestMatrixCSR.npz")
 	test_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
-	loader = load("Files/TestMatrixCSC.npz")
+	loader = load("../Files/TestMatrixCSC.npz")
 	test_csc = csc_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
-	
+
 	# Load training matrices.
-	loader = load("Files/TrainingMatrixCSR.npz")
+	loader = load("../Files/TrainingMatrixCSR.npz")
 	training_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
-	loader = load("Files/TrainingMatrixCSC.npz")
+	loader = load("../Files/TrainingMatrixCSC.npz")
 	training_csc = csc_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
-	
-	user_signature = load("Files/UserSignature.npy")
-	
+
+	user_signature = load("../Files/UserSignature.npy")
+
 	baseline_sum = 0.0
 	latent_sum = 0.0
 	item_sum = 0.0
 	user_sum = 0.0
-	
+
 	# Calculate inner part of the square root of the RMSE.
 	for i in xrange(1, test_csr.shape[0] - 1):
 		movie_index = 0
@@ -50,18 +50,18 @@ def evaluate():
 		# Status
 		if i % 100 == 0:
 			print "%d/%d completed." % (i, test_csr.shape[0] - 1)
-	
+
 	data_size = len(test_csr.data)
-	
+
 	# Refactor range from 0-100 to 0-5 with dividing by 20.
 	print "\nLatent Factor Estimation"
 	print np.sqrt(latent_sum / data_size) / 20
-	
+
 	print "\nBaseline Estimation"
 	print np.sqrt(baseline_sum / data_size) / 20
-	
+
 	print "\nItem-Item Estimation"
 	print np.sqrt(item_sum / data_size) / 20
-	
+
 	print "\nUser-User Estimation"
 	print np.sqrt(user_sum / data_size) / 20

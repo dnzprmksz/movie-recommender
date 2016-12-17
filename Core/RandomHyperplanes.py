@@ -30,7 +30,7 @@ def locality_sensitive_hashing(signature, num_bands):
 	keys = []
 	pairs = []
 
-	loader = load("Files/NormalizedUtilityMatrixCSR.npz")
+	loader = load("../Files/NormalizedUtilityMatrixCSR.npz")
 	n_utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 
 	# Hash each band and assign to hash buckets.
@@ -70,7 +70,7 @@ def locality_sensitive_hashing_movie(signature, num_bands):
     keys = []
     pairs = []
 
-    loader = load("Files/NormalizedUtilityMatrixCSC.npz")
+    loader = load("../Files/NormalizedUtilityMatrixCSC.npz")
     n_utility_csc = csc_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 
     # Hash each band and assign to hash buckets.
@@ -113,7 +113,7 @@ def calculate_user_similarity(user_id, candidate_id, signature):
 # Min-hashing with random vectors. More vectors produce better approximation.
 def generate_user_signature(num_vectors=120):
     # Using normalized utility matrix, since similarity in normalized matrix is more important than vanilla.
-    loader = load("Files/NormalizedUtilityMatrixCSR.npz")
+    loader = load("../Files/NormalizedUtilityMatrixCSR.npz")
     utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 
     # Get number of movies as the dimensions of the vector space.
@@ -145,14 +145,14 @@ def generate_user_signature(num_vectors=120):
     compressed[signature == 1] = True
 
     # Save signature matrix.
-    np.save("Files/UserSignature", compressed)
-    np.save("Files/UserSignatureInteger", signature)
+    np.save("../Files/UserSignature", compressed)
+    np.save("../Files/UserSignatureInteger", signature)
 
 
 # Min-hashing with random vectors. More vectors produce better approximation.
 def generate_movie_signature(num_vectors=240):
     # Using normalized utility matrix, since similarity in normalized matrix is more important than vanilla.
-    loader = load("Files/NormalizedUtilityMatrixCSC.npz")
+    loader = load("../Files/NormalizedUtilityMatrixCSC.npz")
     utility_csc = csc_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 
     # Get number of users as the dimensions of the vector space.
@@ -183,4 +183,4 @@ def generate_movie_signature(num_vectors=240):
     compressed = np.full((num_movies, num_vectors), False, dtype=bool)
 
     # Save signature matrix.
-    np.save("Files/MovieSignature", compressed)
+    np.save("../Files/MovieSignature", compressed)

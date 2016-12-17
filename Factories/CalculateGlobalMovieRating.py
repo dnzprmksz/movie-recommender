@@ -3,7 +3,7 @@ from numpy import load
 
 start_time = time()
 
-loader = load("Files/TrainingMatrixCSR.npz")
+loader = load("../Files/TrainingMatrixCSR.npz")
 
 sum = 0
 count = len(loader["data"])  # Number of total rankings stored as matrix data.
@@ -15,7 +15,7 @@ average = sum/count
 print "Global movie ranking is %d." % average
 
 # Save the global movie ranking not to calculate every time, it is not changing.
-with open('Files/GlobalMovieRating.txt', 'w') as f:
+with open('../Files/GlobalMovieRating.txt', 'w') as f:
 	f.write(str(average))
 
 print "%f seconds elapsed." % (time() - start_time)

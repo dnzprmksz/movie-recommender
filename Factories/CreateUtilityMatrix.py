@@ -43,9 +43,9 @@ utility_csr = csr_matrix((data, (row, col)), shape=(num_of_users + 1, num_of_mov
 utility_csc = csc_matrix((data, (row, col)), shape=(num_of_users + 1, num_of_movies + 1))
 
 # Save utility matrices.
-np.savez("Files/TrainingMatrixCSR", data=utility_csr.data, indices=utility_csr.indices, indptr=utility_csr.indptr,
+np.savez("../Files/TrainingMatrixCSR", data=utility_csr.data, indices=utility_csr.indices, indptr=utility_csr.indptr,
          shape=utility_csr.shape)
-np.savez("Files/TrainingMatrixCSC", data=utility_csc.data, indices=utility_csc.indices, indptr=utility_csc.indptr,
+np.savez("../Files/TrainingMatrixCSC", data=utility_csc.data, indices=utility_csc.indices, indptr=utility_csc.indptr,
          shape=utility_csc.shape)
 
 print "%f seconds to finish." % (time.time() - start_time)
@@ -84,9 +84,9 @@ test_utility_csr = csr_matrix((test_data, (test_row, test_col)), shape=(test_num
 test_utility_csc = csc_matrix((test_data, (test_row, test_col)), shape=(test_num_of_users + 1, test_num_of_movies + 1))
 
 # Save utility matrices.
-np.savez("Files/TestMatrixCSR", data=test_utility_csr.data, indices=test_utility_csr.indices,
+np.savez("../Files/TestMatrixCSR", data=test_utility_csr.data, indices=test_utility_csr.indices,
          indptr=test_utility_csr.indptr, shape=test_utility_csr.shape)
-np.savez("Files/TestMatrixCSC", data=test_utility_csc.data, indices=test_utility_csc.indices,
+np.savez("../Files/TestMatrixCSC", data=test_utility_csc.data, indices=test_utility_csc.indices,
          indptr=test_utility_csc.indptr, shape=test_utility_csc.shape)
 
 print "%f seconds to finish." % (time.time() - start_time2)

@@ -1,13 +1,13 @@
-from time import time
-
 import mysql.connector
 import numpy as np
+from time import time
 from numpy import load
 from scipy.sparse import csr_matrix, csc_matrix
 from scipy.spatial.distance import cosine
 
-from Core.LatentFactor import estimate_user_rating
-from Core.RandomHyperplanes import generate_user_signature, locality_sensitive_hashing, locality_sensitive_hashing_movie
+import Sebastian
+from LatentFactor import estimate_user_rating
+from RandomHyperplanes import generate_user_signature, locality_sensitive_hashing, locality_sensitive_hashing_movie, binary_hash
 
 
 def test_sebastian_recommendation(user_id):
@@ -24,26 +24,18 @@ def test_sebastian_recommendation(user_id):
 
 def test_latent_factor(user_id, movie_id):
 	ranking = estimate_user_rating(user_id, movie_id)
-	loader = load("../Files/TrainingMatrixCSR.npz")
+	loader = load("Files/TrainingMatrixCSR.npz")
 	utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 	real = utility_csr[user_id, movie_id]
 	print "User %d Movie %d. Real ranking: %f. Estimated ranking: %f" % (user_id, movie_id, real, ranking)
 
-
-def test_lsh_speed(num_bands):
-	start_time = time()
-	signature = np.load("../Files/UserSignature.npy")
-	pairs = locality_sensitive_hashing(signature, num_bands)
-	print "Finished in %d seconds." % (time() - start_time)
-
-
 def test_lsh(num_bands):
 	start_time = time()
-	signature = np.load("../Files/UserSignature.npy")
+	signature = np.load("Files/UserSignature.npy")
 	pairs = locality_sensitive_hashing(signature, num_bands)
 	print "LSH completed in %d seconds." % (time() - start_time)
 
-	loader = load("../Files/NormalizedUtilityMatrixCSR.npz")
+	loader = load("Files/NormalizedUtilityMatrixCSR.npz")
 	n_utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 
 	size = len(pairs)
@@ -80,33 +72,6 @@ def test_lsh(num_bands):
 	print "Finished in %d seconds." % (time() - start_time)
 
 
-def test_lsh_movie(num_bands):
-	signature = np.load("../Files/MovieSignature.npy")
-	pairs = locality_sensitive_hashing_movie(signature[0:2000], num_bands)
-	print "---"
-
-	loader = load("../Files/NormalizedUtilityMatrixCSC.npz")
-	n_utility_csc = csc_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
-
-	distances = []
-	for pair in pairs:
-		num = len(pair)
-		for i in xrange(0, num):
-			u = n_utility_csc.getcol(pair[i]).toarray()
-			for j in xrange(i + 1, num):
-				v = n_utility_csc.getcol(pair[j]).toarray()
-				distances.add(cosine(u, v))
-
-	print "---"
-	print "Distances: %d" % len(distances)
-	count = 0
-	for i in distances:
-		if i <= 0.5:
-			count += 1
-	print "Distances less than 0.50: %d" % count
-	print sorted(distances)
-
-
 def test_random_hyperplanes_similarity(i=62500, regenerate=False, vector_count=120):
 	start_time = time()
 
@@ -114,9 +79,9 @@ def test_random_hyperplanes_similarity(i=62500, regenerate=False, vector_count=1
 		generate_user_signature(vector_count)
 
 	# Load necessary matrices.
-	loader = load("../Files/TrainingMatrixCSR.npz")
+	loader = load("Files/TrainingMatrixCSR.npz")
 	utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
-	signature = np.load("../Files/UserSignature.npy")
+	signature = np.load("Files/UserSignature.npy")
 
 	for j in [1, 2, 62500]:
 		u = utility_csr.getrow(i).toarray()
@@ -138,9 +103,8 @@ def test_all(user_id, movie_id):
 
 
 # Test cases.
-#test_random_hyperplanes_similarity(regenerate=True)
+# test_random_hyperplanes_similarity()
 test_lsh(4)
-#test_lsh_speed(4)
 #generate_movie_signature()
 #test_lsh_movie(8)
 #test_all(3, 590)
