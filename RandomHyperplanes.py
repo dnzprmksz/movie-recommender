@@ -89,7 +89,7 @@ def locality_sensitive_hashing_movie(signature, num_bands):
 
 
 # FAILED! Cosine value is not close to the real one, because of the Jaccard similarity at the end.
-def __calculate_similarity_DO_NOT_USE__(user_id, candidate_id, signature):
+def calculate_similarity(user_id, candidate_id, signature):
     dimension = signature.shape[1]
     u = signature[user_id]
     v = signature[candidate_id]
