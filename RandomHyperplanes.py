@@ -92,8 +92,7 @@ def locality_sensitive_hashing_movie(signature, num_bands):
     return keys, pairs
 
 
-# FAILED! Cosine value is not close to the real one, because of the Jaccard similarity at the end.
-def calculate_similarity(user_id, candidate_id, signature):
+def calculate_user_similarity(user_id, candidate_id, signature):
     dimension = signature.shape[1]
     u = signature[user_id]
     v = signature[candidate_id]
@@ -104,6 +103,7 @@ def calculate_similarity(user_id, candidate_id, signature):
 	if u[i] == v[i]:
 	    common += 1
 
+    # Find the Jaccard similarity of two vectors. Calculate the angle and distance between them.
     similarity = float(common) / dimension
     angle = 180 * (1 - similarity)
     distance = 1 - np.cos(np.deg2rad(angle))
@@ -146,6 +146,7 @@ def generate_user_signature(num_vectors=120):
 
     # Save signature matrix.
     np.save("Files/UserSignature", compressed)
+    np.save("Files/UserSignatureInteger", signature)
 
 
 # Min-hashing with random vectors. More vectors produce better approximation.

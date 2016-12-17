@@ -28,7 +28,7 @@ def create_factor_matrices(u1, u2, lambda1, lambda2, factor_count):
 		loop_start_time = time()
 		loop_count += 1
 		for user_id in xrange(1, num_users):
-			row = utility_csr.getrow(user_id)
+			row = utility_csr[user_id]
 			movie_index = 0  # Use individual movie index in user's row data set, for optimization.
 			for movie_id in row.indices:
 				rating = row.data[movie_index]  # r.xi in the formula.

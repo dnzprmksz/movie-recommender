@@ -15,11 +15,10 @@ def recommend_movie(user_id):
 	user_signature = np.load("Files/UserSignature.npy")
 	
 	candidate_list = []
-	similar_user_list = []
 	
 	# Find the cosine distance of each user to the given user.
 	for candidate_id in xrange(1, len(user_signature)):
-		angle, distance = RandomHyperplanes.calculate_similarity(user_id, candidate_id, user_signature)
+		angle, distance = RandomHyperplanes.calculate_user_similarity(user_id, candidate_id, user_signature)
 		candidate_list.append((candidate_id, distance))
 	
 	# Sort them by distance and select the closest ones.
