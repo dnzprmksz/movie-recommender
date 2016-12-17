@@ -16,7 +16,7 @@ def read_global_movie_rating():
 
 
 def user_rating_deviation(user_id, utility_csr):
-	ratings = utility_csr.getrow(user_id)
+	ratings = utility_csr[user_id]
 	# Calculate and return the deviation of the user's rating from the global movie rating.
 	if len(ratings.data) > 0:
 		return mean(ratings.data) - read_global_movie_rating()
