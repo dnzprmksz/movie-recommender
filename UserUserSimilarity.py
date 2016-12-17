@@ -3,16 +3,16 @@ from time import time
 from numpy import load
 from scipy.sparse import csr_matrix, csc_matrix
 from scipy.spatial.distance import cosine
-from RandomHyperplanes import __calculate_similarity_DO_NOT_USE__
+from RandomHyperplanes import calculate_similarity
 
 
 def estimate_by_user_similarity(user_id, movie_id, signature, utility_csr, utility_csc, threshold=0.5):
     # Load necessary matrices.
-    
+
     candidates = []
     user_count=259138
     for other_user in xrange(1,user_count):
-	_, distance = __calculate_similarity_DO_NOT_USE__(user_id, other_user, signature)
+	_, distance = calculate_similarity(user_id, other_user, signature)
 
 	if distance <= threshold:
 	    rating = utility_csr[other_user, movie_id]
@@ -23,7 +23,7 @@ def estimate_by_user_similarity(user_id, movie_id, signature, utility_csr, utili
     print candidates
     if len(candidates) == 0:
 	return 0
-    
+
     for similarity, rating in candidates:
 	if rating > 0:
 	    upper_term += similarity * rating

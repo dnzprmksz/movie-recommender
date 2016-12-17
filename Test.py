@@ -42,10 +42,10 @@ def test_lsh(num_bands):
 	signature = np.load("Files/UserSignature.npy")
 	pairs = locality_sensitive_hashing(signature, num_bands)
 	print "LSH completed in %d seconds." % (time() - start_time)
-	
+
 	loader = load("Files/NormalizedUtilityMatrixCSR.npz")
 	n_utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
-	
+
 	size = len(pairs)
 	count = 0
 	distances = []
@@ -59,7 +59,7 @@ def test_lsh(num_bands):
 		count += 1
 		if count % 500 == 0:
 			print "%d/%d completed." % (count, size)
-	
+
 	print "---"
 	print "Distances: %d" % len(distances)
 	count = 0
@@ -84,10 +84,10 @@ def test_lsh_movie(num_bands):
 	signature = np.load("Files/MovieSignature.npy")
 	pairs = locality_sensitive_hashing_movie(signature[0:2000], num_bands)
 	print "---"
-	
+
 	loader = load("Files/NormalizedUtilityMatrixCSC.npz")
 	n_utility_csc = csc_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
-	
+
 	distances = []
 	for pair in pairs:
 		num = len(pair)
@@ -96,7 +96,7 @@ def test_lsh_movie(num_bands):
 			for j in xrange(i + 1, num):
 				v = n_utility_csc.getcol(pair[j]).toarray()
 				distances.add(cosine(u, v))
-	
+
 	print "---"
 	print "Distances: %d" % len(distances)
 	count = 0
@@ -109,20 +109,20 @@ def test_lsh_movie(num_bands):
 
 def test_random_hyperplanes_similarity(i=62500, regenerate=False, vector_count=120):
 	start_time = time()
-	
+
 	if regenerate:
 		generate_user_signature(vector_count)
-	
+
 	# Load necessary matrices.
 	loader = load("Files/TrainingMatrixCSR.npz")
 	utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 	signature = np.load("Files/UserSignature.npy")
-	
+
 	for j in [1, 2, 62500]:
 		u = utility_csr.getrow(i).toarray()
 		v = utility_csr.getrow(j).toarray()
-		angle, distance = __calculate_similarity_DO_NOT_USE__(i, j, signature)
-		
+		angle, distance = calculate_similarity(i, j, signature)
+
 		print "User %d and Candidate %d" % (i, j)
 		print "Angle and Distance: %d degrees, %f" % (angle, distance)
 		print "Original Distance:  %f\n" % cosine(u, v)
@@ -135,7 +135,7 @@ def test_all(user_id, movie_id):
 	print "Latent Factor"
 	test_latent_factor(user_id, movie_id)
 	print "Finished in %d seconds.\n" % (time() - start_time)
-	
+
 
 # Test cases.
 #test_random_hyperplanes_similarity(regenerate=True)
