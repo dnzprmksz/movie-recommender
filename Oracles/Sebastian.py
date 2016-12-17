@@ -8,11 +8,11 @@ from Core import RandomHyperplanes
 
 def recommend_movie(user_id):
 	# Load necessary matrices.
-	loader = load("Files/NormalizedUtilityMatrixCSR.npz")
+	loader = load("../Files/NormalizedUtilityMatrixCSR.npz")
 	n_utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
-	p = np.load("Files/SGD_P_125.npy")
-	q = np.load("Files/SGD_Q_125.npy")
-	user_signature = np.load("Files/UserSignature.npy")
+	p = np.load("../Files/SGD_P_120.npy")
+	q = np.load("../Files/SGD_Q_120.npy")
+	user_signature = np.load("../Files/UserSignature.npy")
 
 	candidate_list = []
 
