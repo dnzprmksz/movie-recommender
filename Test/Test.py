@@ -148,4 +148,4 @@ def test_all(user_id, movie_id):
 #generate_movie_signature()
 #test_lsh_movie(8)
 #test_all(3, 590)
-recommend_movie(10)
+print recommend_movie(10)
