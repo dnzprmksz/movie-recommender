@@ -24,13 +24,13 @@ def estimate_by_user_similarity(user_id, movie_id, signature, utility_csc):
 			# Store the similarity/rating data.
 			if similarity >= 0.5:
 				candidates.append((similarity, rating))
-			else:
+			elif similarity >= 0.1:
 				non_candidates.append((similarity, rating))
 
 	# If there is not enough close users, add some more distant users.
 	num_candidates = len(candidates)
-	if num_candidates < 4:
-		diff = 4 - num_candidates
+	if num_candidates < 2:
+		diff = 2 - num_candidates
 		non_candidates.sort(key=(lambda x: x[0]), reverse=True)  # Sort the list with respect to the similarity.
 		candidates.extend(non_candidates[:diff])
 
@@ -49,10 +49,16 @@ def estimate_by_user_similarity(user_id, movie_id, signature, utility_csc):
 	return rating
 
 
-# Load training matrices.
-loader = load("../Files/TrainingMatrixCSC.npz")
-training_csc = csc_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
-user_signature = load("../Files/UserSignature.npy")
+# # Load test matrices.
+# loader = load("../Files/MiniTestMatrixCSR.npz")
+# test_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
+# loader = load("../Files/MiniTestMatrixCSC.npz")
+# test_csc = csc_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 
-user_estimation = estimate_by_user_similarity(10, 10, user_signature, training_csc)
-print user_estimation
+# # Load training matrices.
+# loader = load("../Files/MiniTrainingMatrixCSR.npz")
+# training_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
+# loader = load("../Files/MiniTrainingMatrixCSC.npz")
+# training_csc = csc_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
+
+# user_signature = load("../Files/UserSignature.npy")

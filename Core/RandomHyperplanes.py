@@ -82,19 +82,14 @@ def locality_sensitive_hashing_movie(signature, num_bands):
 	n_utility_csc = csc_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 
 	# Hash each band and assign to hash buckets.
-	for movie in xrange(1, num_movies):
-		if len(n_utility_csc.getcol(movie).nonzero()[0]) > 0:
-			for band in xrange(0, num_bands):
-				band_low = band * band_size
-				band_high = band_low + band_size
-				value = signature[movie, band_low:band_high]
-				key = binary_hash(value)
-				hashmap.setdefault(key, []).append(movie)  # Store (key, movie_id) in map.
+	for movie in remove_duplicates(n_utility_csc.tocoo().col):
+		for band in xrange(0, num_bands):
+			band_low = band * band_size
+			band_high = band_low + band_size
+			value = signature[movie, band_low:band_high]
+			key = binary_hash(value)
+			hashmap.setdefault(key, set()).add(movie)  # Store (key, movie_id) in map.
 
 	# Find and return the candidate pairs.
-	for key, value in hashmap.iteritems():
-		if len(value) > 1:
-			keys.append(key)
-			pairs.append(value)
-
-	return keys, pairs
+	pairs = [list(value) for value in hashmap.itervalues() if len(value) > 1]
+	return pairs

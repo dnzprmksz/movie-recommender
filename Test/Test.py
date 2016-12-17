@@ -11,8 +11,9 @@ from scipy.sparse import csr_matrix, csc_matrix
 from scipy.spatial.distance import cosine
 
 from Core.LatentFactor import estimate_user_rating
-from Core.RandomHyperplanes import generate_user_signature, locality_sensitive_hashing, locality_sensitive_hashing_movie
+from Core.RandomHyperplanes import locality_sensitive_hashing, locality_sensitive_hashing_movie
 from Oracles.Sebastian import recommend_movie
+from Factories.CreateSignatureMatrices import generate_user_signature
 
 def test_sebastian_recommendation(user_id):
 	# Get recommendations.
@@ -148,4 +149,4 @@ def test_all(user_id, movie_id):
 #generate_movie_signature()
 #test_lsh_movie(8)
 #test_all(3, 590)
-print recommend_movie(10)
+# print recommend_movie(10)
