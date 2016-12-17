@@ -9,13 +9,13 @@ import LatentFactor
 
 def evaluate():
 	# Load latent factor matrices.
-	p = np.load("Files/SGD_P.npy")
-	q = np.load("Files/SGD_Q.npy")
+	p = np.load("Files/SGD_P_125.npy")
+	q = np.load("Files/SGD_Q_125.npy")
 	
 	# Load test matrices.
-	loader = load("Files/TestMatrixCSR.npz")
+	loader = load("Files/TrainingMatrixCSR.npz")
 	test = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
-	loader = load("Files/TestMatrixCSC.npz")
+	loader = load("Files/TrainingMatrixCSC.npz")
 	test_csc = csc_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 	
 	# Load training matrices.
@@ -24,8 +24,8 @@ def evaluate():
 	loader = load("Files/TrainingMatrixCSC.npz")
 	training_csc = csc_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 	
-	latent_sum = 0.0
 	baseline_sum = 0.0
+	latent_sum = 0.0
 	item_sum = 0.0
 	
 	# Calculate inner part of the square root of the RMSE.
@@ -39,11 +39,11 @@ def evaluate():
 			latent_factor_estimation = LatentFactor.estimate_user_rating(i, j, p, q)
 			latent_sum += (latent_factor_estimation - rating) ** 2
 			# Baseline estimate
-			baseline_estimation = baseline_estimate(i, j, training_csr, training_csc)
-			baseline_sum += (baseline_estimation - rating) ** 2
+			#baseline_estimation = baseline_estimate(i, j, training_csr, training_csc)
+			#baseline_sum += (baseline_estimation - rating) ** 2
 			# Item-Item
-			item_estimation = ItemItemSimilarity.estimate_by_item_similarity(i, j, training_csr, training_csc)
-			item_sum += (item_estimation - rating) ** 2
+			#item_estimation = ItemItemSimilarity.estimate_by_item_similarity(i, j, training_csr, training_csc)
+			#item_sum += (item_estimation - rating) ** 2
 		# Status
 		if i % 1000 == 0:
 			print "%d/%d completed." % (i, test.shape[0] - 1)

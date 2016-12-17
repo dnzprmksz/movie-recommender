@@ -1,13 +1,25 @@
+import mysql.connector
 import numpy as np
 from time import time
 from numpy import load
 from scipy.sparse import csr_matrix, csc_matrix
 from scipy.spatial.distance import cosine
 
-import Toolkit
+import Sebastian
 from LatentFactor import estimate_user_rating
-from RandomHyperplanes import generate_user_signature, locality_sensitive_hashing, __calculate_similarity_DO_NOT_USE__, \
-	locality_sensitive_hashing_movie, generate_movie_signature
+from RandomHyperplanes import generate_user_signature, locality_sensitive_hashing, locality_sensitive_hashing_movie
+
+
+def test_sebastian_recommendation(user_id):
+	# Get recommendations.
+	recommendation_list = Sebastian.recommend_movie(user_id)
+	conn = mysql.connector.connect(user='root', password='admin', host='127.0.0.1', database='webscale')
+	cursor = conn.cursor()
+	# Print movie titles.
+	for movie_id, rating in recommendation_list:
+		cursor.execute("SELECT title FROM movie_list WHERE id = " + str(movie_id) + ";")
+		item = cursor.fetchone()
+		print item[0], rating
 
 
 def test_latent_factor(user_id, movie_id):
@@ -21,7 +33,7 @@ def test_latent_factor(user_id, movie_id):
 def test_lsh_speed(num_bands):
 	start_time = time()
 	signature = np.load("Files/UserSignature.npy")
-	keys, pairs = locality_sensitive_hashing(signature, num_bands)
+	pairs = locality_sensitive_hashing(signature, num_bands)
 	print "Finished in %d seconds." % (time() - start_time)
 
 
@@ -69,7 +81,6 @@ def test_lsh(num_bands):
 
 
 def test_lsh_movie(num_bands):
-	start_time = time()
 	signature = np.load("Files/MovieSignature.npy")
 	pairs = locality_sensitive_hashing_movie(signature[0:2000], num_bands)
 	print "---"
@@ -125,7 +136,6 @@ def test_all(user_id, movie_id):
 	test_latent_factor(user_id, movie_id)
 	print "Finished in %d seconds.\n" % (time() - start_time)
 	
-	print Toolkit.estimate_rating(user_id, movie_id)
 
 # Test cases.
 #test_random_hyperplanes_similarity(regenerate=True)
@@ -133,4 +143,4 @@ def test_all(user_id, movie_id):
 #test_lsh_speed(4)
 #generate_movie_signature()
 #test_lsh_movie(8)
-test_all(3, 590)
+#test_all(3, 590)
