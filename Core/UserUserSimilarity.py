@@ -1,13 +1,10 @@
 from itertools import izip
-import numpy as np
-from numpy import load
-from scipy.sparse import csr_matrix, csc_matrix
 
 import Toolkit
 from RandomHyperplanes import calculate_user_similarity
 
 
-def estimate_by_user_similarity(user_id, movie_id, signature, utility_csc):
+def estimate_by_user_similarity(user_id, movie_id, signature, utility_csc, threshold=0.5):
 	candidates = []
 	non_candidates = []
 
@@ -22,7 +19,7 @@ def estimate_by_user_similarity(user_id, movie_id, signature, utility_csc):
 			_, distance = calculate_user_similarity(user_id, candidate_id, signature)
 			similarity = 1 - distance
 			# Store the similarity/rating data.
-			if similarity >= 0.5:
+			if similarity >= threshold:
 				candidates.append((similarity, rating))
 			else:
 				non_candidates.append((similarity, rating))
@@ -47,12 +44,3 @@ def estimate_by_user_similarity(user_id, movie_id, signature, utility_csc):
 	else:
 		rating = Toolkit.read_global_movie_rating()
 	return rating
-
-
-# Load training matrices.
-loader = load("../Files/TrainingMatrixCSC.npz")
-training_csc = csc_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
-user_signature = load("../Files/UserSignature.npy")
-
-user_estimation = estimate_by_user_similarity(10, 10, user_signature, training_csc)
-print user_estimation
