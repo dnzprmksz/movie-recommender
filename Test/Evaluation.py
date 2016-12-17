@@ -4,6 +4,7 @@ from scipy.sparse import csc_matrix, csr_matrix
 
 from Core import UserUserSimilarity
 
+
 def evaluate():
 	# Load latent factor matrices.
 	p = np.load("../Files/SGD_P_100.npy")
