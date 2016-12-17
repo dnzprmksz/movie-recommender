@@ -21,13 +21,13 @@ def estimate_by_user_similarity(user_id, movie_id, signature, utility_csc, thres
 			# Store the similarity/rating data.
 			if similarity >= threshold:
 				candidates.append((similarity, rating))
-			else:
+			elif similarity >= 0.1:
 				non_candidates.append((similarity, rating))
 
 	# If there is not enough close users, add some more distant users.
 	num_candidates = len(candidates)
-	if num_candidates < 4:
-		diff = 4 - num_candidates
+	if num_candidates < 2:
+		diff = 2 - num_candidates
 		non_candidates.sort(key=(lambda x: x[0]), reverse=True)  # Sort the list with respect to the similarity.
 		candidates.extend(non_candidates[:diff])
 
