@@ -12,15 +12,14 @@ def rmse(acquired_data, test_data):
 
 
 def read_global_movie_rating():
-	with open('Files/GlobalMovieRating.txt', 'r') as f:
-		return float(f.read())
+	return 70.0
 
 
 def user_rating_deviation(user_id, utility_csr):
 	ratings = utility_csr.getrow(user_id)
 	# Calculate and return the deviation of the user's rating from the global movie rating.
 	if len(ratings.data) > 0:
-		return mean(ratings.data) - 70.0
+		return mean(ratings.data) - read_global_movie_rating()
 	else:
 		return 0.0
 
@@ -29,10 +28,10 @@ def movie_rating_deviation(movie_id, utility_csc):
 	ratings = utility_csc.getcol(movie_id)
 	# Calculate and return the deviation of the movie's rating from the global movie rating.
 	if len(ratings.data) > 0:
-		return mean(ratings.data) - 70.0
+		return mean(ratings.data) - read_global_movie_rating()
 	else:
 		return 0.0
 
 
 def baseline_estimate(user_id, movie_id, utility_csr, utility_csc):
-	return 70.0 + user_rating_deviation(user_id, utility_csr) + movie_rating_deviation(movie_id, utility_csc)
+	return read_global_movie_rating() + user_rating_deviation(user_id, utility_csr) + movie_rating_deviation(movie_id, utility_csc)

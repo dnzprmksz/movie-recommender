@@ -20,9 +20,9 @@ def evaluate():
 	test_csc = csc_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 	
 	# Load training matrices.
-	loader = load("Files/MiniTrainingMatrixCSR.npz")
+	loader = load("Files/TrainingMatrixCSR.npz")
 	training_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
-	loader = load("Files/MiniTrainingMatrixCSC.npz")
+	loader = load("Files/TrainingMatrixCSC.npz")
 	training_csc = csc_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 	
 	user_signature = load("Files/UserSignature.npy")

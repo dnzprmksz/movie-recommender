@@ -1,3 +1,4 @@
+import Toolkit
 from RandomHyperplanes import calculate_user_similarity
 
 
@@ -37,8 +38,9 @@ def estimate_by_user_similarity(user_id, movie_id, signature, utility_csc):
 		upper_term += similarity * rating
 		lower_term += similarity
 
-	if lower_term > 0:
+	# If no one rated this movie return the global average.
+	if lower_term != 0:
 		rating = upper_term / lower_term
 	else:
-		rating = 70  # Global average.
+		rating = Toolkit.read_global_movie_rating()
 	return rating
