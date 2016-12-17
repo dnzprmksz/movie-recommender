@@ -7,7 +7,7 @@ def estimate_by_user_similarity(user_id, movie_id, signature, utility_csc):
 	non_candidates = []
 	
 	# Find the users that rated the given movie.
-	movie_col = utility_csc.getcol(movie_id)
+	movie_col = utility_csc[:, movie_id]
 	rated_users = movie_col.indices
 	user_ratings = movie_col.data
 	
@@ -29,7 +29,8 @@ def estimate_by_user_similarity(user_id, movie_id, signature, utility_csc):
 	if num_candidates < 4:
 		diff = 4 - num_candidates
 		non_candidates.sort(key=(lambda x: x[0]), reverse=True)  # Sort the list with respect to the similarity.
-		candidates.extend(non_candidates[0:diff])
+		num_extra = min(diff, len(non_candidates))
+		candidates.extend(non_candidates[0:num_extra])
 	
 	upper_term = 0
 	lower_term = 0
