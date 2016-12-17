@@ -6,7 +6,7 @@ import time
 start_time = time.time()
 
 # Connect to mysql database
-conn = mysql.connector.connect(user='root', password='nazli1234', host='127.0.0.1', database='webscale')
+conn = mysql.connector.connect(user='root', host='127.0.0.1', database='web_scale')
 print "Connected to the database successfully."
 cursor = conn.cursor()
 movie_cursor = conn.cursor()
@@ -59,55 +59,41 @@ column_year = []
 data_year = []
 
 
-for i in range(0, num_of_movies):
-    # Create actor data
-    if len((str(movies[i][6])).split('|')) <= 1:
-        if (str(movies[i][6])) != '0':
-            row_actor.append(i)
-            column_actor.append(int(movies[i][6]))
-            data_actor.append(1)
-    else:
-        for j in (str(movies[i][6])).split('|'):
-            row_actor.append(i)
-            column_actor.append(j)
+for idx, movie in enumerate(movies, 1):
+    if (str(movie[6])) != '0':
+        for actor in str(movie[6]).split('|'):
+            row_actor.append(idx)
+            column_actor.append(int(actor))
             data_actor.append(1)
 
     # Create genre data
-    if len((str(movies[i][5])).split('|')) <= 1:
-        if (str(movies[i][5])) != '0':
-            row_genre.append(i)
-            column_genre.append(movies[i][5])
-            data_genre.append(1)
-    else:
-        for j in str(movies[i][5]).split('|'):
-            row_genre.append(i)
-            column_genre.append(j)
+    if (str(movie[5])) != '0':
+        for genre in str(movie[5]).split('|'):
+            row_genre.append(idx)
+            column_genre.append(int(genre))
             data_genre.append(1)
 
     # # Create director data
-    # if not movies[i][5] == 0:
-    #     row_genre.append(i)
-    #     column_genre.append(movies[i][5])
+    # if not movie[r] == 0:
+    #     row_genre.append(movie)
+    #     column_genre.append(movie[4])
     #     data_genre.append(1)
-    #
-    # # Create year data
-    # if not movies[i][4] == 0:
-    #     row_year.append(i)
-    #     column_year.append(movies[i][4])
-    #     data_year.append(1)
 
+    # Create year data
+    if int(movie[3]) != 0:
+        row_year.append(idx)
+        column_year.append(int(movie[3]))
+        data_year.append(1)
 
 actor_based_csr = csr_matrix((data_actor, (row_actor, column_actor)), shape=(num_of_movies + 1, num_of_actors + 1));
 genre_based_csr = csr_matrix((data_genre, (row_genre, column_genre)), shape=(num_of_movies + 1, num_of_genres + 1));
-# director_based_csr = csr_matrix((data_director, (row_director, column_director)), shape=(num_of_movies + 1,
-# len(directors) + 1));
+# director_based_csr = csr_matrix((data_director, (row_director, column_director)), shape=(num_of_movies + 1, len(directors) + 1));
 year_based_csr = csr_matrix((data_year, (row_year, column_year)), shape=(num_of_movies + 1, max_year + 1));
 
-actor_based_csc = csc_matrix((data_actor, (row_actor, column_actor)), shape=(num_of_movies + 1, num_of_actors + 1));
-genre_based_csc = csc_matrix((data_genre, (row_genre, column_genre)), shape=(num_of_movies + 1, num_of_genres + 1));
-# director_based_csr = csr_matrix((data_director, (row_director, column_director)), shape=(num_of_movies + 1,
-# len(directors) + 1));
-year_based_csc = csc_matrix((data_year, (row_year, column_year)), shape=(num_of_movies + 1, max_year + 1));
+actor_based_csc = actor_based_csr.tocsc();
+genre_based_csc = genre_based_csr.tocsc();
+# director_based_csc = director_based_csr.tocsc();
+year_based_csc = year_based_csr.tocsc();
 
 # Save utility matrices.
 np.savez("../Files/ActorBasedMatrixCSR", data=actor_based_csr.data, indices=actor_based_csr.indices, indptr=actor_based_csr.indptr,
