@@ -1,3 +1,7 @@
+import os
+import sys
+sys.path.insert(0, os.path.abspath('..'))
+
 import numpy as np
 from numpy import load
 from scipy.sparse import csc_matrix, csr_matrix
@@ -7,8 +11,8 @@ from Core import UserUserSimilarity
 
 def evaluate():
 	# Load latent factor matrices.
-	p = np.load("../Files/SGD_P_100.npy")
-	q = np.load("../Files/SGD_Q_100.npy")
+	p = np.load("../Files/SGD_P_120.npy")
+	q = np.load("../Files/SGD_Q_120.npy")
 
 	# Load test matrices.
 	loader = load("../Files/TestMatrixCSR.npz")
@@ -66,3 +70,5 @@ def evaluate():
 
 	print "\nUser-User Estimation"
 	print np.sqrt(user_sum / data_size) / 20
+
+# evaluate()
