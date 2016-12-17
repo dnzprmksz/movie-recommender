@@ -43,20 +43,43 @@ def get_similar_actor(target_movie, id=14):
 	return commons
 
 
-# Find most similar 5 movies with the given vector for year
+def get_similar_movie_by_content(target_movie, content_csr):
+	similarities = []
+	commons = []
+	target_content = target_movie.indices
+	for movie in xrange(1, content_csr.shape[0]):
+                current_elem = content_csr[movie].indices
+		similarity = find_jaccard_similarity(target_content, current_elem)
+                if similarity >= 0.5:
+                        commons.append((movie, similarity))
+        commons.sort(key=(lambda x:x[1]))
+	return commons
 
-# Find most similar 5 movies with the given vector for genre
 
-# Takes 5x1 vectors from all 3 different contents
+# =======SAMPLE USAGE======
+# loader = load("../Files/ActorBasedMatrixCSR.npz")
+# movie_actor = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 
-temp = csr_matrix((1, 94222), dtype=np.int8)
-temp[0, 1] = 1
-temp[0, 2] = 1
-temp[0, 3] = 1
-temp[0, 4] = 1
-temp[0, 5] = 1
+# loader = load("../Files/YearBasedMatrixCSR.npz")
+# movie_year = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 
-print get_similar_actor(temp.getrow(0))
-#print temp.indices[1]
+# loader = load("../Files/GenreBasedMatrixCSR.npz")
+# movie_genre = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 
- #print count_ones([1,0,0,1,0,0,0,0,1], [1,0,0,1,0,0,1,1,1])
+# temp_actor = csr_matrix((1, 94222), dtype=np.int8)
+# temp_actor[0, 1] = 1
+# temp_actor[0, 2] = 1
+# temp_actor[0, 3] = 1
+# temp_actor[0, 4] = 1
+# temp_actor[0, 5] = 1
+# print get_similar_movie_by_content(temp_actor[0], movie_actor)
+
+# temp_genre = csr_matrix((1, 94222), dtype=np.int8)
+# temp_genre[0, 1] = 1
+# temp_genre[0, 2] = 1
+# temp_genre[0, 3] = 1
+# print get_similar_movie_by_content(temp_genre[0], movie_genre)
+
+# temp_year = csr_matrix((1, 94222), dtype=np.int8)
+# temp_year[0, 1999] = 1
+# print get_similar_movie_by_content(temp_year[0], movie_year)
