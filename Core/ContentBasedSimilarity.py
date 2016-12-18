@@ -59,9 +59,10 @@ def get_similar_movies(target_movie_id):
 	movie_genre = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
 
 	# Not sure about this part?? - Tried to obtain the vector of the movie using the movie_id
-	target_movie_actor = movie_actor[target_movie_id].indices
-	target_movie_year = movie_year[target_movie_id].indices
-	target_movie_genre = movie_genre[target_movie_id].indices
+	target_movie_actor = movie_actor[target_movie_id]
+	target_movie_year = movie_year[target_movie_id]
+	target_movie_genre = movie_genre[target_movie_id]
+	print movie_genre[target_movie_id]
 
 	# Obtain similar movies based on all three attributes
 	common_movies_based_on_actor = get_similar_movie_by_content(target_movie_actor, movie_actor)
@@ -78,7 +79,7 @@ def get_similar_movies(target_movie_id):
 	similar_movies.sort(key=lambda x: x[1], reverse=True)
 
 	# Returns the most similar 5 movies based on the content
-	return similar_movies[5]
+	return similar_movies[0: 5]
 
 # =======SAMPLE USAGE======
 # loader = load("../Files/ActorBasedMatrixCSR.npz")
@@ -110,4 +111,4 @@ def get_similar_movies(target_movie_id):
 
 # Sample Usage:
 # # Find the most similar movies for movie_id = 32
-# print get_similar_movie(32)
+print get_similar_movies(32)
