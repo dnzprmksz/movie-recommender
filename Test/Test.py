@@ -3,6 +3,7 @@ import sys
 sys.path.insert(0, os.path.abspath('..'))
 
 from time import time
+import linecache
 
 import mysql.connector
 import numpy as np
@@ -15,6 +16,9 @@ from Core.RandomHyperplanes import locality_sensitive_hashing, locality_sensitiv
 from Oracles.Sebastian import recommend_movie
 from Factories.CreateSignatureMatrices import generate_user_signature
 import MovieList
+
+def get_movie_title(id):
+	return linecache.getline("../Files/MovieList.txt", id)
 
 def test_sebastian_recommendation(user_id):
 	# Get recommendations.
