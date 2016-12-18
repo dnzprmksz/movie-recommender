@@ -57,12 +57,15 @@ def create_cb_rating_matrix(content_based_csr_link, normalized_utility_csr_link)
 	return content_based_csr
 
 start_time = time.time()
-actor_based_csr = create_cb_rating_matrix("Files/ActorBasedMatrixCSR.npz", "Files/NormalizedUtilityMatrixCSR.npz")
+
+actor_based_csr = create_cb_rating_matrix("../Files/ActorBasedMatrixCSR.npz", "Files/NormalizedUtilityMatrixCSR.npz")
 np.savez("../Files/ActorBasedCSR", data=actor_based_csr.data, indices=actor_based_csr.indices, indptr=actor_based_csr.indptr, shape=actor_based_csr.shape)
+year_based_csr = create_cb_rating_matrix("../Files/YearBasedMatrixCSR.npz", "Files/NormalizedUtilityMatrixCSR.npz")
+np.savez("../Files/YearBasedCSR", data=year_based_csr.data, indices=year_based_csr.indices, indptr=year_based_csr.indptr, shape=year_based_csr.shape)
+genre_based_csr = create_cb_rating_matrix("../Files/GenreBasedMatrixCSR.npz", "Files/NormalizedUtilityMatrixCSR.npz")
+np.savez("../Files/GenreBasedCSR", data=genre_based_csr.data, indices=genre_based_csr.indices, indptr=genre_based_csr.indptr, shape=genre_based_csr.shape)
+
 print "%f seconds to finish." % (time.time() - start_time)
 
-#start_time = time.time()
-#genre_based_csr = create_cb_rating_matrix("Files/GenreBasedMatrixCSC.npz", "Files/NormalizedUtilityMatrixCSC.npz")
-#print "%f seconds to finish." % (time.time() - start_time)
 
 
