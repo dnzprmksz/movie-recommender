@@ -30,10 +30,12 @@ def recommend_movie(user_id, desired_movie_count=10):
 		
 		# Form the best movie list of the similar users.
 		j = 0
+		normalized_max = max(data)
+		threshold = normalized_max * 0.5  # Get the movies that are in the top 25% portion of the similar user.
 		while j < num_movies and len(movie_list) < desired_movie_count:
 			current_movie_id = movie_id_list[j]
 			rating = data[j]
-			if rating >= 0 and current_movie_id not in user_movie_id_list:  # Check if movie has rated as positive by the user.
+			if rating >= threshold and current_movie_id not in user_movie_id_list:  # Check if movie has rated as positive by the user.
 				movie_list.add(current_movie_id)
 			j += 1
 		i += 1

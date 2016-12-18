@@ -11,10 +11,6 @@ def predict_rating(user_id, movie_id, item_cofactor=0.4, user_cofactor=0.25, lat
 	user_similarity_rating = UserUserSimilarity.estimate_by_user_similarity(user_id, movie_id, user_signature, training_csc)
 	latent_factor_rating = LatentFactor.estimate_user_rating(user_id, movie_id, p, q)
 	
-	print "Item similarity: %f" % item_similarity_rating
-	print "User similarity: %f" % user_similarity_rating
-	print "Latent factor:   %f" % latent_factor_rating
-	
 	# Calculate a final rating using the linear combination of the estimations.
 	rating = item_cofactor * item_similarity_rating + user_cofactor * user_similarity_rating + latent_cofactor * latent_factor_rating
 	return rating

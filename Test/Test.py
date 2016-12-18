@@ -5,7 +5,6 @@ sys.path.insert(0, os.path.abspath('..'))
 
 from time import time
 
-import mysql.connector
 import numpy as np
 from numpy import load
 from scipy.sparse import csr_matrix, csc_matrix
@@ -17,16 +16,13 @@ from Oracles import Sebastian
 from Factories.CreateSignatureMatrices import generate_user_signature
 import MovieList
 
-def test_sebastian_recommendation(user_id):
+
+def test_sebastian_recommendation(user_id, desired_movie_count=10):
 	# Get recommendations.
-	recommendation_list = Sebastian.recommend_movie(user_id)
-	conn = mysql.connector.connect(user='root', password='admin', host='127.0.0.1', database='webscale')
-	cursor = conn.cursor()
+	recommendation_list = Sebastian.recommend_movie(user_id, desired_movie_count)
 	# Print movie titles.
 	for movie_id, rating in recommendation_list:
-		cursor.execute("SELECT title FROM movie_list WHERE id = " + str(movie_id) + ";")
-		item = cursor.fetchone()
-		print item[0], rating
+		print MovieList.movie_list[movie_id], rating
 
 
 def test_latent_factor(user_id, movie_id):
