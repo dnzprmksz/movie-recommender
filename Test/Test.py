@@ -1,5 +1,6 @@
 import os
 import sys
+
 sys.path.insert(0, os.path.abspath('..'))
 
 from time import time
@@ -11,8 +12,8 @@ from scipy.sparse import csr_matrix, csc_matrix
 from scipy.spatial.distance import cosine
 
 from Core.LatentFactor import estimate_user_rating
-from Core.RandomHyperplanes import locality_sensitive_hashing, locality_sensitive_hashing_movie
-from Oracles.Sebastian import recommend_movie
+from Core.RandomHyperplanes import locality_sensitive_hashing, locality_sensitive_hashing_movie, calculate_user_similarity
+from Oracles import Sebastian
 from Factories.CreateSignatureMatrices import generate_user_signature
 
 def test_sebastian_recommendation(user_id):
@@ -126,7 +127,7 @@ def test_random_hyperplanes_similarity(i=62500, regenerate=False, vector_count=1
 	for j in [1, 2, 62500]:
 		u = utility_csr.getrow(i).toarray()
 		v = utility_csr.getrow(j).toarray()
-		angle, distance = calculate_similarity(i, j, signature)
+		angle, distance = calculate_user_similarity(i, j, signature)
 
 		print "User %d and Candidate %d" % (i, j)
 		print "Angle and Distance: %d degrees, %f" % (angle, distance)
