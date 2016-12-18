@@ -9,9 +9,13 @@ def find_jaccard_similarity(target_movie, current_movie):
 	# union = len(set(target_movie+current_movie))
 	common_count = 0
 	union = len(target_movie) + len(current_movie)
+        if union == 0:
+                return 0
 	for attr in target_movie:
 		if attr in current_movie:
 			common_count += 1
+        if union == common_count:
+                return 1
 	similarity = float(common_count) / (union - common_count)
 	return similarity
 
@@ -62,7 +66,7 @@ def get_similar_movies(target_movie_id):
 	target_movie_actor = movie_actor[target_movie_id]
 	target_movie_year = movie_year[target_movie_id]
 	target_movie_genre = movie_genre[target_movie_id]
-	print movie_genre[target_movie_id]
+	# print movie_genre[target_movie_id]
 
 	# Obtain similar movies based on all three attributes
 	common_movies_based_on_actor = get_similar_movie_by_content(target_movie_actor, movie_actor)
@@ -111,4 +115,5 @@ def get_similar_movies(target_movie_id):
 
 # Sample Usage:
 # # Find the most similar movies for movie_id = 32
-print get_similar_movies(32)
+for i in xrange(20):
+        print get_similar_movies(i)
