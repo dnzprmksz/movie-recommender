@@ -4,6 +4,7 @@ import sys
 sys.path.insert(0, os.path.abspath('..'))
 
 from time import time
+import linecache
 
 import numpy as np
 from numpy import load
@@ -14,7 +15,10 @@ from Core.LatentFactor import estimate_user_rating
 from Core.RandomHyperplanes import locality_sensitive_hashing, locality_sensitive_hashing_movie, calculate_user_similarity
 from Oracles import Sebastian
 from Factories.CreateSignatureMatrices import generate_user_signature
-import MovieList
+
+
+def get_movie_title(id):
+	return linecache.getline("../Files/MovieList.txt", id)
 
 
 def test_sebastian_recommendation(user_id, desired_movie_count=10):
@@ -22,7 +26,7 @@ def test_sebastian_recommendation(user_id, desired_movie_count=10):
 	recommendation_list = Sebastian.recommend_movie(user_id, desired_movie_count)
 	# Print movie titles.
 	for movie_id, rating in recommendation_list:
-		print MovieList.movie_list[movie_id], rating
+		print get_movie_title(movie_id), rating
 
 
 def test_latent_factor(user_id, movie_id):
