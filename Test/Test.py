@@ -1,35 +1,32 @@
 import os
 import sys
+
 sys.path.insert(0, os.path.abspath('..'))
 
 from time import time
 import linecache
 
-import mysql.connector
 import numpy as np
 from numpy import load
 from scipy.sparse import csr_matrix, csc_matrix
 from scipy.spatial.distance import cosine
 
 from Core.LatentFactor import estimate_user_rating
-from Core.RandomHyperplanes import locality_sensitive_hashing, locality_sensitive_hashing_movie
-from Oracles.Sebastian import recommend_movie
+from Core.RandomHyperplanes import locality_sensitive_hashing, locality_sensitive_hashing_movie, calculate_user_similarity
+from Oracles import Sebastian
 from Factories.CreateSignatureMatrices import generate_user_signature
-import MovieList
+
 
 def get_movie_title(id):
 	return linecache.getline("../Files/MovieList.txt", id)
 
-def test_sebastian_recommendation(user_id):
+
+def test_sebastian_recommendation(user_id, desired_movie_count=10):
 	# Get recommendations.
-	recommendation_list = Sebastian.recommend_movie(user_id)
-	conn = mysql.connector.connect(user='root', password='admin', host='127.0.0.1', database='webscale')
-	cursor = conn.cursor()
+	recommendation_list = Sebastian.recommend_movie(user_id, desired_movie_count)
 	# Print movie titles.
 	for movie_id, rating in recommendation_list:
-		cursor.execute("SELECT title FROM movie_list WHERE id = " + str(movie_id) + ";")
-		item = cursor.fetchone()
-		print item[0], rating
+		print get_movie_title(movie_id), rating
 
 
 def test_latent_factor(user_id, movie_id):
@@ -131,7 +128,7 @@ def test_random_hyperplanes_similarity(i=62500, regenerate=False, vector_count=1
 	for j in [1, 2, 62500]:
 		u = utility_csr.getrow(i).toarray()
 		v = utility_csr.getrow(j).toarray()
-		angle, distance = calculate_similarity(i, j, signature)
+		angle, distance = calculate_user_similarity(i, j, signature)
 
 		print "User %d and Candidate %d" % (i, j)
 		print "Angle and Distance: %d degrees, %f" % (angle, distance)
