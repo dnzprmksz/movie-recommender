@@ -29,7 +29,7 @@ def generate_user_signature(num_vectors=120):
 	for i in xrange(0, signature.shape[0]):
 		for j in xrange(0, signature.shape[1]):
 			if signature[i, j] == 0:
-				signature[i, j] = np.random.randint(2)  # Convert 0s into 0 or 1. New 0s will be considered as negative.
+				signature[i, j] = np.random.randint(2)	# Convert 0s into 0 or 1. New 0s will be considered as negative.
 
 	# Label positives as +1 and negatives as -1.
 	signature[signature > 0] = 1
@@ -69,7 +69,7 @@ def generate_movie_signature(num_vectors=240):
 	for i in xrange(0, signature.shape[0]):
 		for j in xrange(0, signature.shape[1]):
 			if signature[i, j] == 0:
-				signature[i, j] = np.random.randint(2)  # Convert 0s into 0 or 1. New 0s will be considered as negative.
+				signature[i, j] = np.random.randint(2)	# Convert 0s into 0 or 1. New 0s will be considered as negative.
 
 	# Label positives as +1 and negatives as -1.
 	signature[signature > 0] = 1
