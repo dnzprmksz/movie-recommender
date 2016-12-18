@@ -6,7 +6,7 @@ import time
 start_time = time.time()
 
 # Connect to mysql database
-conn = mysql.connector.connect(user='root', host='127.0.0.1', database='web_scale')
+conn = mysql.connector.connect(user='root', password='root', port=8889, database='webscale')
 print "Connected to the database successfully."
 cursor = conn.cursor()
 movie_cursor = conn.cursor()
@@ -23,17 +23,14 @@ num_of_movies = len(movies)
 # Get number of actors
 actor_cursor.execute("SELECT COUNT(*) FROM actor_list;")
 num_of_actors = actor_cursor.fetchone()[0]
-# print num_of_actors
 
 # Get number of directors
 director_cursor.execute("SELECT COUNT(*) FROM director_list;")
 num_of_directors = director_cursor.fetchall()[0][0]
-# print num_of_directors
 
 # Get number of genres
 genre_cursor.execute("SELECT COUNT(*) FROM genre_list;")
 num_of_genres = genre_cursor.fetchall()[0][0]
-# print num_of_genres
 
 # Calculate the number of release years
 cursor.execute("SELECT release_year FROM movie_list WHERE release_year = (SELECT MAX(release_year) FROM movie_list);")
@@ -58,7 +55,6 @@ row_year = []
 column_year = []
 data_year = []
 
-
 for idx, movie in enumerate(movies, 1):
     if (str(movie[6])) != '0':
         for actor in str(movie[6]).split('|'):
@@ -78,7 +74,6 @@ for idx, movie in enumerate(movies, 1):
     #     row_genre.append(movie)
     #     column_genre.append(movie[4])
     #     data_genre.append(1)
-
     # Create year data
     if int(movie[3]) != 0:
         row_year.append(idx)
@@ -96,20 +91,7 @@ genre_based_csc = genre_based_csr.tocsc();
 year_based_csc = year_based_csr.tocsc();
 
 # Save utility matrices.
-np.savez("../Files/ActorBasedMatrixCSR", data=actor_based_csr.data, indices=actor_based_csr.indices, indptr=actor_based_csr.indptr,
-         shape=actor_based_csr.shape)
-np.savez("../Files/GenreBasedMatrixCSR", data=genre_based_csr.data, indices=genre_based_csr.indices, indptr=genre_based_csr.indptr,
-         shape=genre_based_csr.shape)
 # np.savez("../Files/DirectorBasedMatrixCSR", data=genre_based_csr, indices=genre_based_csr.indices,
 # indptr=genre_based_csr.indptr, shape=genre_based_csr.shape)
-np.savez("../Files/YearBasedMatrixCSR", data=year_based_csr.data, indices=year_based_csr.indices, indptr=year_based_csr.indptr,
-         shape=year_based_csr.shape)
-
-np.savez("../Files/ActorBasedMatrixCSC", data=actor_based_csc.data, indices=actor_based_csc.indices, indptr=actor_based_csc.indptr,
-         shape=actor_based_csc.shape)
-np.savez("../Files/GenreBasedMatrixCSC", data=genre_based_csc.data, indices=genre_based_csc.indices, indptr=genre_based_csc.indptr,
-         shape=genre_based_csc.shape)
-np.savez("../Files/YearBasedMatrixCSC", data=year_based_csc.data, indices=year_based_csc.indices, indptr=year_based_csc.indptr,
-         shape=year_based_csc.shape)
 
 print "%f seconds to finish." % (time.time() - start_time)
