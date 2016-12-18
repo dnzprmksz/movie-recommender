@@ -12,6 +12,8 @@ def estimate_by_item_similarity(user_id, movie_id, utility_csr, utility_csc, thr
 	candidate_movies = []
 	for rated_movie_id in movies_of_user:
 		candidate_movie = utility_csc[:, rated_movie_id]
+                if len(target_movie.data) == 0:
+                        continue
 		distance = cosine(candidate_movie.toarray(), target_movie.toarray())
 		candidate_movies.append((rated_movie_id, distance))  # Append candidate movie's id and its cos distance to the list.
 

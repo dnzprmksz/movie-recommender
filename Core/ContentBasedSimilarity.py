@@ -44,12 +44,8 @@ def get_similar_movie_by_content(target_movie, content_csr):
 	for movie in xrange(1, content_csr.shape[0]):
 		current_elem = content_csr[movie].indices
 		similarity = find_jaccard_similarity(target_content, current_elem)
-		if similarity >= 0.5:
-			commons.append((movie, similarity))
-	# Sort descending
-	commons.sort(key=(lambda x: x[1]), reverse=True)
+		commons.append(similarity)
 	return commons
-
 
 # Use the method above for all attributes of the movie and find the most similar k movies
 def get_similar_movies(target_movie_id):
@@ -69,21 +65,24 @@ def get_similar_movies(target_movie_id):
 	# print movie_genre[target_movie_id]
 
 	# Obtain similar movies based on all three attributes
-	common_movies_based_on_actor = get_similar_movie_by_content(target_movie_actor, movie_actor)
-	common_movies_based_on_year = get_similar_movie_by_content(target_movie_year, movie_year)
-	common_movies_based_on_genre = get_similar_movie_by_content(target_movie_genre, movie_genre)
+        year_weight=0.1
+        genre_weight=0.4
+        actor_weight=0.5
+	common_movies_actor = get_similar_movie_by_content(target_movie_actor, movie_actor)
+	common_movies_year = get_similar_movie_by_content(target_movie_year, movie_year)
+	common_movies_genre = get_similar_movie_by_content(target_movie_genre, movie_genre)
 
-	# Combine the results of all three attributes
-	similar_movies = []
-	similar_movies.extend(common_movies_based_on_actor)
-	similar_movies.extend(common_movies_based_on_year)
-	similar_movies.extend(common_movies_based_on_genre)
-
+        similar_movies = []
+        for movie_id,data in enumerate(zip(common_movies_actor,common_movies_year,common_movies_genre), 1):
+                actor,year,genre = data
+                # print actor, year, genre
+                similar_movies.append((movie_id, actor*actor_weight + year*year_weight + genre*genre_weight))
 	# Find the most similar ones among them
+        print len(similar_movies)
 	similar_movies.sort(key=lambda x: x[1], reverse=True)
 
 	# Returns the most similar 5 movies based on the content
-	return similar_movies[0: 5]
+	return similar_movies[1: 11]
 
 # =======SAMPLE USAGE======
 # loader = load("../Files/ActorBasedMatrixCSR.npz")
@@ -115,5 +114,4 @@ def get_similar_movies(target_movie_id):
 
 # Sample Usage:
 # # Find the most similar movies for movie_id = 32
-for i in xrange(20):
-        print get_similar_movies(i)
+# print get_similar_movies(4)
