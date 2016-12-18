@@ -26,8 +26,8 @@ def estimate_by_user_similarity(user_id, movie_id, signature, utility_csc, thres
 
 	# If there is not enough close users, add some more distant users.
 	num_candidates = len(candidates)
-	if num_candidates < 2:
-		diff = 2 - num_candidates
+	if num_candidates < 3:
+		diff = 3 - num_candidates
 		non_candidates.sort(key=(lambda x: x[0]), reverse=True)  # Sort the list with respect to the similarity.
 		candidates.extend(non_candidates[:diff])
 

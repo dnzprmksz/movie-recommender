@@ -1,8 +1,3 @@
-from itertools import izip
-import numpy as np
-from numpy import load
-from scipy.sparse import csr_matrix, csc_matrix
-
 from scipy.spatial.distance import cosine
 from Toolkit import baseline_estimate
 
@@ -35,7 +30,7 @@ def estimate_by_item_similarity(user_id, movie_id, utility_csr, utility_csc, thr
 	if num_similar_movies < 5:
 		diff = 5 - num_similar_movies
 		different_movies.sort(key=(lambda x: x[1]))  # Sort with respect to the distance.
-		similar_movies.extend(different_movies[diff])
+		similar_movies.extend(different_movies[0:diff])
 
 	upper_term = 0
 	lower_term = 0
