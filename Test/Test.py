@@ -50,40 +50,51 @@ def test_lsh(num_bands):
 	pairs = locality_sensitive_hashing(signature, num_bands)
 	print "LSH completed in %d seconds." % (time() - start_time)
 
-	loader = load("../Files/NormalizedUtilityMatrixCSR.npz")
-	n_utility_csr = csr_matrix((loader["data"], loader["indices"], loader["indptr"]), shape=loader["shape"])
-
 	size = len(pairs)
 	count = 0
 	distances = []
+	similarities = []
 	for pair in pairs:
 		num = len(pair)
 		for i in xrange(0, num):
-			u = n_utility_csr.getrow(pair[i]).toarray()
 			for j in xrange(i+1, num):
-				v = n_utility_csr.getrow(pair[j]).toarray()
-				distances.append(cosine(u, v))
+				_, distance,similarity = calculate_user_similarity(pair[i], pair[j], signature)
+				#distances.append(distance)
+				similarities.append(similarity)
+		
 		count += 1
-		if count % 500 == 0:
+		if count % 1000 == 0:
 			print "%d/%d completed." % (count, size)
 
 	print "---"
-	print "Distances: %d" % len(distances)
-	count = 0
-	for i in distances:
-		if i <= 0.35:
-			count += 1
-	print "Distances less than 0.35: %d" % count
-	count = 0
-	for i in distances:
-		if i <= 0.5:
-			count += 1
-	print "Distances less than 0.50: %d" % count
-	count = 0
-	for i in distances:
-		if i <= 0.75:
-			count += 1
-	print "Distances less than 0.75: %d" % count
+	#print "Distances: %d" % len(distances)
+	print "Similarities: %d" % len(similarities)
+	count1 = 0
+	count2 = 0
+	count3 = 0
+	count4 = 0
+	count5 = 0
+	for i in similarities:
+		if i > 0.3:
+			count1 += 1
+		if i > 0.5:
+			count2 += 1
+		if i > 0.7:
+			count3 += 1
+		if i > 0.9:
+			count4 += 1
+		if i == 1.0:
+			count5 += 1
+	print "LSH with %d bands." % num_bands
+	print "Similarity greater than 0.3: %d" % count1
+	print "Similarity greater than 0.5: %d" % count2
+	print "Similarity greater than 0.7: %d" % count3
+	print "Similarity greater than 0.9: %d" % count4
+	print "Similarity equal to 1.0:     %d" % count5
+	#print "Distances less than 0.35: %d" % count1
+	#print "Distances less than 0.50: %d" % count2
+	#print "Distances less than 0.75: %d" % count3
+	#print "Distances less than 1.00: %d" % count4
 	print "Finished in %d seconds." % (time() - start_time)
 
 
@@ -146,11 +157,11 @@ def test_all(user_id, movie_id):
 
 # Test cases.
 #test_random_hyperplanes_similarity(regenerate=True)
-# test_lsh(4)
+#test_lsh(5)
 #test_lsh_speed(4)
 #generate_movie_signature()
 #test_lsh_movie(8)
 #test_all(3, 590)
 # print recommend_movie(10)
 # print MovieList.movie_list[10]
-# print MovieList.movie_list['10']
+# print MovieList.movie_list

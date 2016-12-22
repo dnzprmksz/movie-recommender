@@ -3,7 +3,8 @@ from time import time
 from numpy import load, mean
 from scipy.sparse import csr_matrix
 
-def normalie_utility_matrix():
+
+def normalize_utility_matrix():
 	start_time = time()
 
 	loader = load("../Files/TrainingMatrixCSR.npz")
@@ -25,3 +26,5 @@ def normalie_utility_matrix():
 	np.savez("../Files/NormalizedUtilityMatrixCSR", data=utility_csr.data, indices=utility_csr.indices, indptr=utility_csr.indptr, shape=utility_csr.shape)
 
 	print "%f seconds elapsed." % (time() - start_time)
+
+normalize_utility_matrix()

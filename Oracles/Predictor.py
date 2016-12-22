@@ -14,3 +14,4 @@ def predict_rating(user_id, movie_id, item_cofactor=0.4, user_cofactor=0.25, lat
 	# Calculate a final rating using the linear combination of the estimations.
 	rating = item_cofactor * item_similarity_rating + user_cofactor * user_similarity_rating + latent_cofactor * latent_factor_rating
 	return rating
+ 

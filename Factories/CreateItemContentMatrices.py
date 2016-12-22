@@ -99,13 +99,13 @@ def create_year_content_matrices(conn):
 	for idx, movie in enumerate(movies, 1):
 		year = int(movie[3])
 		if year == 0:
-		    continue
+			continue
 		if year < 1900:
 			year = 1800
 		elif year < 1950:
 			year = 1900
 		else:
-		    year = year / 10 * 10
+			year = year / 10 * 10
 		row_year.append(idx)
 		column_year.append(year)
 		data_year.append(1)

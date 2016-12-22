@@ -36,7 +36,6 @@ def create_factor_matrices(u1, u2, lambda1, lambda2, factor_count):
 				pr = p[user_id]   # P as row vector.
 				qr = q[movie_id]  # Q as row vector.
 
-				# TODO: Rewrite mathematical formula for user/item utility matrix and check this implementation.
 				# One iteration of update part of Stochastic Gradient Descent algorithm.
 				error = rating - qr.dot(pc)
 				q[movie_id] += u1 * (error * pr - lambda2 * qr)
@@ -57,4 +56,4 @@ def create_factor_matrices(u1, u2, lambda1, lambda2, factor_count):
 			np.save(q_filename, q)
 
 # Create P and Q matrices. Comment out below function or call in another file.
-# create_factor_matrices(0.0003, 0.0004, 0.0008, 0.0009, 3
+# create_factor_matrices(0.0001, 0.0001, 0.001, 0.001, 3
