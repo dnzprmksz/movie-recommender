@@ -52,12 +52,31 @@ def get_similar_movies(target_movie_id, movie_count=10, year_weight=0.1, genre_w
 	common_movies_genre = __get_similar_movie_by_content__(target_movie_genre, movie_genre)
 
 	similar_movies = []
-	for movie_id, data in enumerate(zip(common_movies_actor, common_movies_year, common_movies_genre), 1):
+	for movie_id, data in enumerate(zip(common_movies_actor,common_movies_year,common_movies_genre), 1):
 		actor, year, genre = data
-		# print actor, year, genre
+		if year > 2000:
+			year_weight = 0.1
+			genre_weight = 0.37
+			actor_weight = 0.53
+		elif year < 1980:
+			year_weight = 0.2
+			genre_weight = 0.35
+			actor_weight = 0.45
+		elif year < 1950:
+			year_weight = 0.35
+			genre_weight = 0.2
+			actor_weight = 0.45
+		elif year < 1900:
+			year_weight = 0.4
+			genre_weight = 0.25
+			actor_weight = 0.35
+		else:
+			year_weight=0.5
+			genre_weight=0.15
+			actor_weight=0.35
 		similar_movies.append((movie_id, actor*actor_weight + year*year_weight + genre*genre_weight))
 	
-	# Find the most similar ones among them.
+	# Find the most similar ones among them
 	similar_movies.sort(key=lambda x: x[1], reverse=True)
 	
 	# Returns the most similar 5 movies based on the content
@@ -77,7 +96,7 @@ def get_similar_movies(target_movie_id, movie_count=10, year_weight=0.1, genre_w
 # temp_actor[0, 1] = 1
 # temp_actor[0, 2] = 1
 # temp_actor[0, 3] = 1
-# temp_actor[0, 4] = 1
+# temp_actor[0, 4] = 1e
 # temp_actor[0, 5] = 1
 # print get_similar_movie_by_content(temp_actor[0], movie_actor)
 
